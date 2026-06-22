@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Submission {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  // 1. Key Contacts
+  tsOwnerName    String?
+  tsOwnerRole    String?
+  tsOwnerEmail   String?
+  
+  irOwnerName    String?
+  irOwnerRole    String?
+  irOwnerEmail   String?
+  
+  itContactName  String?
+  itContactRole  String?
+  itContactEmail String?
+  
+  workshopParticipants String? // JSON array
+
+  // 2. Tender Scout - Key Inputs
+  tsPriorityRegions String? // JSON array
+  tsTenderPortals   String? // JSON array
+  tsProjectTypes    String?
+  tsExclusions      String?
+  tsKeywords        String? // JSON array
+  tsContractors     String? // JSON array
+
+  // 3. Innovation Radar - Key Inputs
+  irCompetitors     String? // JSON array
+  irTechThemes      String? // JSON array
+  irMarketTopics    String? // JSON array
+  irResourceTopics  String? // JSON array
+  irSources         String? // JSON array
+  irKeywords        String? // JSON array
+
+  // 4. Outputs and Users
+  usersTenderScout  String? // JSON array
+  usersInnovation   String? // JSON array
+  alertsTenderScout String? // JSON array
+  alertsInnovation  String? // JSON array
+  
+  mustHaves         String?
+  niceToHaves       String?
+
+  // 5. Constraints / Additional Notes
+  constraints       String?
+}
