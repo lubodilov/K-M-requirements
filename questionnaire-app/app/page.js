@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 function Tooltip({ text }) {
   const [show, setShow] = useState(false);
@@ -130,6 +131,19 @@ export default function Home() {
 
   return (
     <div className="container">
+      {/* Top Navigation */}
+      <div className="nav-bar">
+        <div className="nav-logo">K+M Requirements</div>
+        <div className="nav-links">
+          <Link href="/" className="nav-link active">
+            Questionnaire
+          </Link>
+          <Link href="/agenda" className="nav-link">
+            Workshop Agenda
+          </Link>
+        </div>
+      </div>
+
       <div className="header">
         <div className="badge">
           <span className="badge-dot"></span>
