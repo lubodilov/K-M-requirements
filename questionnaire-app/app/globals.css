@@ -1143,3 +1143,137 @@ textarea {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* Submissions Page Styles */
+.submission-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.submission-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.submission-card:hover {
+  border-color: var(--accent);
+}
+
+.submission-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  cursor: pointer;
+}
+
+.submission-header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.submission-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.submission-meta {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.submission-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.submission-details {
+  border-top: 1px solid var(--border-color);
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  animation: fadeIn 0.3s ease;
+}
+
+.submission-sec {
+  margin-bottom: 2rem;
+}
+
+.submission-sec:last-child {
+  margin-bottom: 0;
+}
+
+.submission-sec h3 {
+  font-size: 1.1rem;
+  color: var(--accent);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.submission-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.data-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.data-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.data-value {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.data-table-wrapper {
+  overflow-x: auto;
+  margin-top: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  text-align: left;
+}
+
+.data-table th, .data-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.data-table th {
+  background-color: rgba(255, 255, 255, 0.02);
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+

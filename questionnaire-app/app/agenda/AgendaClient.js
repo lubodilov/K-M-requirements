@@ -183,7 +183,6 @@ export default function AgendaClient({ latestSubmission, participants }) {
 
   return (
     <div className="container">
-      {/* Top Navigation */}
       <div className="nav-bar">
         <div className="nav-logo">K+M Requirements</div>
         <div className="nav-links">
@@ -192,6 +191,9 @@ export default function AgendaClient({ latestSubmission, participants }) {
           </Link>
           <Link href="/agenda" className="nav-link active">
             Workshop Agenda
+          </Link>
+          <Link href="/submissions" className="nav-link">
+            Submissions
           </Link>
         </div>
       </div>

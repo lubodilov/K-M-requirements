@@ -131,7 +131,6 @@ export default function Home() {
 
   return (
     <div className="container">
-      {/* Top Navigation */}
       <div className="nav-bar">
         <div className="nav-logo">K+M Requirements</div>
         <div className="nav-links">
@@ -140,6 +139,9 @@ export default function Home() {
           </Link>
           <Link href="/agenda" className="nav-link">
             Workshop Agenda
+          </Link>
+          <Link href="/submissions" className="nav-link">
+            Submissions
           </Link>
         </div>
       </div>
