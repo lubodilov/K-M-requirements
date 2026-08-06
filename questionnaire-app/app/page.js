@@ -129,6 +129,64 @@ export default function Home() {
     setLoading(false);
   };
 
+  if (status && status.type === "success") {
+    return (
+      <div className="container">
+        <div className="nav-bar">
+          <div className="nav-logo">K+M Requirements</div>
+          <div className="nav-links">
+            <Link href="/" className="nav-link active">
+              Questionnaire
+            </Link>
+            <Link href="/agenda" className="nav-link">
+              Workshop Agenda
+            </Link>
+            <Link href="/submissions" className="nav-link">
+              Submissions
+            </Link>
+          </div>
+        </div>
+
+        <div className="card success-card animate-fade-in" style={{ textAlign: "center", padding: "4rem 2rem", marginTop: "2rem" }}>
+          <div style={{ fontSize: "5rem", marginBottom: "1.5rem" }}>✅</div>
+          <h2 style={{ fontSize: "2rem", marginBottom: "1rem", color: "var(--accent)" }}>Submission Successful!</h2>
+          <p className="subtitle" style={{ maxWidth: "500px", margin: "0 auto 2.5rem auto", color: "var(--text-secondary)" }}>
+            Thank you! Your Tender Scout & Innovation Radar requirements have been successfully saved to the database.
+          </p>
+          
+          <div style={{ display: "flex", justifyContent: "center", gap: "1rem", flexWrap: "wrap" }}>
+            <Link href="/agenda" className="btn btn-primary" style={{ padding: "0.75rem 1.5rem" }}>
+              🗓️ Go to Workshop Agenda
+            </Link>
+            <Link href="/submissions" className="btn btn-outline" style={{ padding: "0.75rem 1.5rem" }}>
+              📁 View Submissions Database
+            </Link>
+            <button 
+              type="button" 
+              className="btn btn-outline" 
+              style={{ padding: "0.75rem 1.5rem" }} 
+              onClick={() => {
+                setFormData({
+                  tsOwnerName: "", tsOwnerRole: "", tsOwnerEmail: "",
+                  irOwnerName: "", irOwnerRole: "", irOwnerEmail: "",
+                  itContactName: "", itContactRole: "", itContactEmail: "",
+                  workshopParticipants: [],
+                  tsPriorityRegions: [], tsTenderPortals: [], tsProjectTypes: "", tsExclusions: "", tsKeywords: [], tsContractors: [],
+                  irCompetitors: [], irTechThemes: [], irMarketTopics: [], irResourceTopics: [], irSources: [], irKeywords: [],
+                  usersTenderScout: [], usersInnovation: [], alertsTenderScout: [], alertsInnovation: [],
+                  mustHaves: "", niceToHaves: "", constraints: ""
+                });
+                setStatus(null);
+              }}
+            >
+              🔄 Submit Another Response
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container">
       <div className="nav-bar">
@@ -155,11 +213,7 @@ export default function Home() {
         <p className="subtitle">Please fill out this form to prepare for the Tender Scout & Innovation Radar workshop.</p>
       </div>
 
-      {status && (
-        <div className={`notification ${status.type}`}>
-          {status.message}
-        </div>
-      )}
+      {/* Top status notification removed, success page shows instead on success, and error displays at the bottom */}
 
       <form onSubmit={handleSubmit}>
         <div className="card">
@@ -463,6 +517,12 @@ export default function Home() {
             <textarea name="constraints" value={formData.constraints} onChange={handleChange} />
           </div>
         </div>
+
+        {status && status.type === "error" && (
+          <div className="notification error" style={{ marginBottom: "1.5rem" }}>
+            {status.message}
+          </div>
+        )}
 
         <div className="submit-section">
           <button type="submit" className="btn btn-primary" disabled={loading}>
