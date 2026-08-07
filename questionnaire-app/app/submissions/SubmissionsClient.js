@@ -18,6 +18,229 @@ export default function SubmissionsClient({ submissions }) {
     }
   };
 
+  const downloadMarkdown = (sub, idx) => {
+    const participants = parseJSON(sub.workshopParticipants);
+    const tsRegions = parseJSON(sub.tsPriorityRegions);
+    const tsPortals = parseJSON(sub.tsTenderPortals);
+    const tsKeywords = parseJSON(sub.tsKeywords);
+    const tsContractors = parseJSON(sub.tsContractors);
+    const irCompetitors = parseJSON(sub.irCompetitors);
+    const irTechThemes = parseJSON(sub.irTechThemes);
+    const irMarketTopics = parseJSON(sub.irMarketTopics);
+    const irResourceTopics = parseJSON(sub.irResourceTopics);
+    const irSources = parseJSON(sub.irSources);
+    const irKeywords = parseJSON(sub.irKeywords);
+    const tsUsers = parseJSON(sub.usersTenderScout);
+    const irUsers = parseJSON(sub.usersInnovation);
+    const tsAlerts = parseJSON(sub.alertsTenderScout);
+    const irAlerts = parseJSON(sub.alertsInnovation);
+
+    let md = `# K+M Project: Requirements Questionnaire Submission\n\n`;
+    md += `**Submission Date:** ${new Date(sub.createdAt).toLocaleString()}\n`;
+    md += `**Submission ID:** ${sub.id}\n`;
+    md += `**Tender Scout Owner:** ${sub.tsOwnerName || "TBD"}\n\n`;
+    md += `---\n\n`;
+
+    md += `## 1. Key Contacts & Workshop Participants\n\n`;
+    md += `### Key Contacts\n`;
+    md += `* **Tender Scout Owner:** ${sub.tsOwnerName || "—"} (${sub.tsOwnerRole || "No Role"}) - ${sub.tsOwnerEmail || "No Email"}\n`;
+    md += `* **Innovation Radar Owner:** ${sub.irOwnerName || "—"} (${sub.irOwnerRole || "No Role"}) - ${sub.irOwnerEmail || "No Email"}\n`;
+    md += `* **IT / Security Contact:** ${sub.itContactName || "—"} (${sub.itContactRole || "No Role"}) - ${sub.itContactEmail || "No Email"}\n\n`;
+
+    md += `### Workshop Participants\n`;
+    if (participants.length === 0) {
+      md += `*No participants listed.*\n\n`;
+    } else {
+      md += `| Name | Role | Topic / Reason |\n`;
+      md += `| --- | --- | --- |\n`;
+      participants.forEach(p => {
+        md += `| ${p.name || "—"} | ${p.role || "—"} | ${p.topic || "—"} |\n`;
+      });
+      md += `\n`;
+    }
+
+    md += `## 2. Tender Scout Settings\n\n`;
+    md += `### Key Inputs\n`;
+    md += `* **Project Types:** ${sub.tsProjectTypes || "—"}\n`;
+    md += `* **Exclusions:** ${sub.tsExclusions || "—"}\n\n`;
+
+    md += `### Priority Regions / Countries\n`;
+    if (tsRegions.length === 0) {
+      md += `*None listed.*\n\n`;
+    } else {
+      md += `| Region / Country | Priority | Notes |\n`;
+      md += `| --- | --- | --- |\n`;
+      tsRegions.forEach(r => {
+        md += `| ${r.region || "—"} | ${r.priority || "—"} | ${r.notes || "—"} |\n`;
+      });
+      md += `\n`;
+    }
+
+    md += `### Tender Portals\n`;
+    if (tsPortals.length === 0) {
+      md += `*None listed.*\n\n`;
+    } else {
+      md += `| Portal Name | URL | Priority |\n`;
+      md += `| --- | --- | --- |\n`;
+      tsPortals.forEach(p => {
+        md += `| ${p.name || "—"} | ${p.url || "—"} | ${p.priority || "—"} |\n`;
+      });
+      md += `\n`;
+    }
+
+    md += `### Keywords Watchlist\n`;
+    if (tsKeywords.length === 0) {
+      md += `*None listed.*\n\n`;
+    } else {
+      md += `| Keyword | Action | Notes |\n`;
+      md += `| --- | --- | --- |\n`;
+      tsKeywords.forEach(k => {
+        md += `| ${k.keyword || "—"} | ${k.action || "—"} | ${k.notes || "—"} |\n`;
+      });
+      md += `\n`;
+    }
+
+    md += `### Key Contractors Tracked\n`;
+    if (tsContractors.length === 0) {
+      md += `*None listed.*\n\n`;
+    } else {
+      md += `| Contractor Name | Region | Notes |\n`;
+      md += `| --- | --- | --- |\n`;
+      tsContractors.forEach(c => {
+        md += `| ${c.name || "—"} | ${c.region || "—"} | ${c.notes || "—"} |\n`;
+      });
+      md += `\n`;
+    }
+
+    md += `## 3. Innovation Radar Settings\n\n`;
+    md += `### Competitors\n`;
+    if (irCompetitors.length === 0) {
+      md += `*None listed.*\n\n`;
+    } else {
+      md += `| Competitor Name | Priority | Notes |\n`;
+      md += `| --- | --- | --- |\n`;
+      irCompetitors.forEach(c => {
+        md += `| ${c.name || "—"} | ${c.priority || "—"} | ${c.notes || "—"} |\n`;
+      });
+      md += `\n`;
+    }
+
+    md += `### Technology Themes\n`;
+    if (irTechThemes.length === 0) {
+      md += `*None listed.*\n\n`;
+    } else {
+      md += `| Theme | Priority | Notes |\n`;
+      md += `| --- | --- | --- |\n`;
+      irTechThemes.forEach(t => {
+        md += `| ${t.theme || "—"} | ${t.priority || "—"} | ${t.notes || "—"} |\n`;
+      });
+      md += `\n`;
+    }
+
+    md += `### Market Developments\n`;
+    if (irMarketTopics.length === 0) {
+      md += `*None listed.*\n\n`;
+    } else {
+      md += `| Topic | Priority | Notes |\n`;
+      md += `| --- | --- | --- |\n`;
+      irMarketTopics.forEach(m => {
+        md += `| ${m.theme || "—"} | ${m.priority || "—"} | ${m.notes || "—"} |\n`;
+      });
+      md += `\n`;
+    }
+
+    md += `### Resource & Commodity Topics\n`;
+    if (irResourceTopics.length === 0) {
+      md += `*None listed.*\n\n`;
+    } else {
+      md += `| Topic | Priority | Notes |\n`;
+      md += `| --- | --- | --- |\n`;
+      irResourceTopics.forEach(r => {
+        md += `| ${r.theme || "—"} | ${r.priority || "—"} | ${r.notes || "—"} |\n`;
+      });
+      md += `\n`;
+    }
+
+    md += `### Sources Watchlist\n`;
+    if (irSources.length === 0) {
+      md += `*None listed.*\n\n`;
+    } else {
+      md += `| Source Name | URL | Priority |\n`;
+      md += `| --- | --- | --- |\n`;
+      irSources.forEach(s => {
+        md += `| ${s.name || "—"} | ${s.url || "—"} | ${s.priority || "—"} |\n`;
+      });
+      md += `\n`;
+    }
+
+    md += `### Keywords Watchlist\n`;
+    if (irKeywords.length === 0) {
+      md += `*None listed.*\n\n`;
+    } else {
+      md += `| Keyword | Category | Notes |\n`;
+      md += `| --- | --- | --- |\n`;
+      irKeywords.forEach(k => {
+        md += `| ${k.keyword || "—"} | ${k.category || "—"} | ${k.notes || "—"} |\n`;
+      });
+      md += `\n`;
+    }
+
+    md += `## 4. Outputs & Users\n\n`;
+    md += `### User Groups\n`;
+    md += `* **Tender Scout Users:**\n`;
+    if (tsUsers.length === 0) {
+      md += `  *None listed.*\n`;
+    } else {
+      tsUsers.forEach(u => {
+        md += `  * **${u.user || "—"}:** ${u.purpose || "—"}\n`;
+      });
+    }
+    md += `* **Innovation Radar Users:**\n`;
+    if (irUsers.length === 0) {
+      md += `  *None listed.*\n`;
+    } else {
+      irUsers.forEach(u => {
+        md += `  * **${u.user || "—"}:** ${u.purpose || "—"}\n`;
+      });
+    }
+    md += `\n`;
+
+    md += `### Alert Recipients\n`;
+    md += `* **Tender Scout Alerts:**\n`;
+    if (tsAlerts.length === 0) {
+      md += `  *None listed.*\n`;
+    } else {
+      tsAlerts.forEach(a => {
+        md += `  * **${a.recipient || "—"}** (${a.type || "—"}) - Frequency: ${a.frequency || "—"}\n`;
+      });
+    }
+    md += `* **Innovation Radar Alerts:**\n`;
+    if (irAlerts.length === 0) {
+      md += `  *None listed.*\n`;
+    } else {
+      irAlerts.forEach(a => {
+        md += `  * **${a.recipient || "—"}** (${a.type || "—"}) - Frequency: ${a.frequency || "—"}\n`;
+      });
+    }
+    md += `\n`;
+
+    md += `### First Release Focus\n`;
+    md += `* **Must-Haves for Release 1:** ${sub.mustHaves || "—"}\n`;
+    md += `* **Nice-to-Haves for Future:** ${sub.niceToHaves || "—"}\n\n`;
+
+    md += `## 5. Constraints & Additional Notes\n\n`;
+    md += `* **Constraints:** ${sub.constraints || "—"}\n`;
+
+    const blob = new Blob([md], { type: "text/markdown;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `km_requirements_submission_${submissions.length - idx}.md`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="container">
       {/* Top Navigation */}
@@ -87,7 +310,17 @@ export default function SubmissionsClient({ submissions }) {
                     </span>
                   </div>
                   <div className="submission-actions">
-                    <button className="btn btn-outline" style={{ minWidth: "120px" }}>
+                    <button 
+                      className="btn btn-outline" 
+                      style={{ marginRight: "0.75rem" }} 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        downloadMarkdown(sub, idx);
+                      }}
+                    >
+                      📥 Download Doc
+                    </button>
+                    <button className="btn btn-outline" style={{ minWidth: "120px" }} onClick={() => toggleExpand(sub.id)}>
                       {isExpanded ? "Collapse ▲" : "View Details ▼"}
                     </button>
                   </div>
