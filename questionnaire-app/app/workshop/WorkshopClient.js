@@ -7,6 +7,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
   // Facilitator Mode Toggle
   const [facilitatorMode, setFacilitatorMode] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  const [started, setStarted] = useState(false);
 
   // Parse helper
   const parseJSON = (str) => {
@@ -479,41 +480,53 @@ export default function WorkshopClient({ latestSubmission, participants }) {
       chapter: "03 Tender Scout",
       title: "Where should Tender Scout focus first?",
       content: (
-        <div className="animate-fade-in">
-          <p className="slide-p">Your current input is "Europe" and "North America". We need a specific starting country scope for Release 1.</p>
+        <div className="slide-dashboard-layout">
+          <div className="dashboard-left">
+            <div className="context-box">
+              <div className="context-title">What you told us</div>
+              <p className="context-content">Priority Regions: Europe, North America</p>
+            </div>
+            <div className="context-box" style={{ background: "rgba(45, 212, 191, 0.05)", borderColor: "rgba(45, 212, 191, 0.2)" }}>
+              <div className="context-title" style={{ color: "var(--accent)" }}>What we need to lock today</div>
+              <p className="context-content">Define the exact countries that form the first implementation scope within these regions.</p>
+            </div>
+          </div>
           
-          <div className="grid-3" style={{ gap: "1rem", margin: "1.5rem 0" }}>
-            <div className="card">
-              <h4 style={{ fontSize: "0.9rem", color: "var(--accent)", marginBottom: "0.75rem" }}>Release 1</h4>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-                {decisions.tsGeoRelease1.map(c => (
-                  <span key={c} className="participant-pill" style={{ cursor: "pointer", border: "1px solid var(--accent)" }} onClick={() => {
-                    updateDecision("tsGeoRelease1", decisions.tsGeoRelease1.filter(x => x !== c));
-                    updateDecision("tsGeoNext", [...decisions.tsGeoNext, c]);
-                  }}>{c} &rarr;</span>
-                ))}
-                {decisions.tsGeoRelease1.length === 0 && <span style={{ fontSize: "0.8rem", color: "var(--text-muted)", fontStyle: "italic" }}>Empty. Click item below to add.</span>}
+          <div className="dashboard-right">
+            <h3 style={{ fontSize: "0.85rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "1rem" }}>Decision</h3>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+              <div className="card" style={{ padding: "1.5rem" }}>
+                <h4 style={{ fontSize: "0.9rem", color: "var(--text-primary)", marginBottom: "0.75rem" }}>Release 1</h4>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+                  {decisions.tsGeoRelease1.map(c => (
+                    <span key={c} className="participant-pill" style={{ cursor: "pointer", border: "1px solid var(--accent)", background: "rgba(45, 212, 191, 0.1)", color: "var(--text-primary)" }} onClick={() => {
+                      updateDecision("tsGeoRelease1", decisions.tsGeoRelease1.filter(x => x !== c));
+                      updateDecision("tsGeoNext", [...decisions.tsGeoNext, c]);
+                    }}>{c} &rarr;</span>
+                  ))}
+                  {decisions.tsGeoRelease1.length === 0 && <span style={{ fontSize: "0.8rem", color: "var(--text-muted)", fontStyle: "italic" }}>Empty. Click item below to add.</span>}
+                </div>
+              </div>
+
+              <div className="card" style={{ padding: "1.5rem" }}>
+                <h4 style={{ fontSize: "0.9rem", color: "var(--text-secondary)", marginBottom: "0.75rem" }}>Next priority</h4>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+                  {decisions.tsGeoNext.map(c => (
+                    <span key={c} className="participant-pill" style={{ cursor: "pointer", border: "1px solid rgba(255,255,255,0.1)", color: "var(--text-primary)" }} onClick={() => {
+                      updateDecision("tsGeoNext", decisions.tsGeoNext.filter(x => x !== c));
+                      updateDecision("tsGeoExcluded", [...decisions.tsGeoExcluded, c]);
+                    }}>{c} &rarr;</span>
+                  ))}
+                  {decisions.tsGeoNext.length === 0 && <span style={{ fontSize: "0.8rem", color: "var(--text-muted)", fontStyle: "italic" }}>Empty.</span>}
+                </div>
               </div>
             </div>
 
-            <div className="card">
-              <h4 style={{ fontSize: "0.9rem", color: "var(--text-secondary)", marginBottom: "0.75rem" }}>Next priority</h4>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-                {decisions.tsGeoNext.map(c => (
-                  <span key={c} className="participant-pill" style={{ cursor: "pointer" }} onClick={() => {
-                    updateDecision("tsGeoNext", decisions.tsGeoNext.filter(x => x !== c));
-                    updateDecision("tsGeoExcluded", [...decisions.tsGeoExcluded, c]);
-                  }}>{c} &rarr;</span>
-                ))}
-                {decisions.tsGeoNext.length === 0 && <span style={{ fontSize: "0.8rem", color: "var(--text-muted)", fontStyle: "italic" }}>Empty.</span>}
-              </div>
-            </div>
-
-            <div className="card">
+            <div className="card" style={{ padding: "1.5rem", marginTop: "1rem" }}>
               <h4 style={{ fontSize: "0.9rem", color: "var(--text-muted)", marginBottom: "0.75rem" }}>Excluded / later</h4>
               <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
                 {decisions.tsGeoExcluded.map(c => (
-                  <span key={c} className="participant-pill" style={{ cursor: "pointer", opacity: 0.6 }} onClick={() => {
+                  <span key={c} className="participant-pill" style={{ cursor: "pointer", opacity: 0.6, border: "1px solid rgba(255,255,255,0.05)", background: "rgba(0,0,0,0.2)", color: "var(--text-muted)" }} onClick={() => {
                     updateDecision("tsGeoExcluded", decisions.tsGeoExcluded.filter(x => x !== c));
                     updateDecision("tsGeoRelease1", [...decisions.tsGeoRelease1, c]);
                   }}>{c} &rarr;</span>
@@ -521,27 +534,27 @@ export default function WorkshopClient({ latestSubmission, participants }) {
                 {decisions.tsGeoExcluded.length === 0 && <span style={{ fontSize: "0.8rem", color: "var(--text-muted)", fontStyle: "italic" }}>Empty.</span>}
               </div>
             </div>
-          </div>
 
-          <div className="card" style={{ borderLeft: "3px solid #ff9900", marginTop: "1rem" }}>
-            <h4 style={{ color: "#ff9900", margin: "0 0 0.5rem 0", fontSize: "1rem" }}>⚠️ Source-Scope Inconsistency</h4>
-            <p style={{ margin: "0 0 1rem 0", fontSize: "0.85rem", color: "var(--text-secondary)" }}>
-              AusTender is currently listed as a target portal, but Australia is not in your priority geographic scope.
-            </p>
-            <label style={{ fontSize: "0.85rem", fontWeight: "600", display: "block", marginBottom: "0.5rem" }}>
-              Should Australia be in the initial Release 1 geographic scope, or is AusTender for later?
-            </label>
-            <div style={{ display: "flex", gap: "1rem" }}>
-              <button className={`btn ${decisions.tsAustraliaDecision === "Initial Scope" ? "btn-primary" : "btn-outline"}`} onClick={() => {
-                updateDecision("tsAustraliaDecision", "Initial Scope");
-                updateDecision("tsGeoRelease1", [...decisions.tsGeoRelease1.filter(x => x !== "Australia"), "Australia"]);
-                updateDecision("tsGeoExcluded", decisions.tsGeoExcluded.filter(x => x !== "Australia"));
-              }}>Include Australia in Release 1</button>
-              <button className={`btn ${decisions.tsAustraliaDecision === "Later Phase" ? "btn-primary" : "btn-outline"}`} onClick={() => {
-                updateDecision("tsAustraliaDecision", "Later Phase");
-                updateDecision("tsGeoRelease1", decisions.tsGeoRelease1.filter(x => x !== "Australia"));
-                updateDecision("tsGeoExcluded", [...decisions.tsGeoExcluded.filter(x => x !== "Australia"), "Australia"]);
-              }}>Exclude Australia (Later Phase)</button>
+            <div className="card" style={{ borderLeft: "3px solid #f59e0b", marginTop: "1rem", padding: "1.5rem", background: "rgba(245, 158, 11, 0.05)" }}>
+              <h4 style={{ color: "#fbbf24", margin: "0 0 0.5rem 0", fontSize: "1rem" }}>⚠️ Source-Scope Inconsistency</h4>
+              <p style={{ margin: "0 0 1rem 0", fontSize: "0.85rem", color: "rgba(255,255,255,0.7)" }}>
+                AusTender is currently listed as a target portal, but Australia is not in your priority geographic scope.
+              </p>
+              <label style={{ fontSize: "0.85rem", fontWeight: "600", display: "block", marginBottom: "0.5rem", color: "var(--text-primary)" }}>
+                Should Australia be in the initial Release 1 geographic scope, or is AusTender for later?
+              </label>
+              <div style={{ display: "flex", gap: "1rem" }}>
+                <button className={`btn ${decisions.tsAustraliaDecision === "Initial Scope" ? "btn-primary" : "btn-outline"}`} style={{ flexGrow: 1 }} onClick={() => {
+                  updateDecision("tsAustraliaDecision", "Initial Scope");
+                  updateDecision("tsGeoRelease1", [...decisions.tsGeoRelease1.filter(x => x !== "Australia"), "Australia"]);
+                  updateDecision("tsGeoExcluded", decisions.tsGeoExcluded.filter(x => x !== "Australia"));
+                }}>Include Australia in Release 1</button>
+                <button className={`btn ${decisions.tsAustraliaDecision === "Later Phase" ? "btn-primary" : "btn-outline"}`} style={{ flexGrow: 1 }} onClick={() => {
+                  updateDecision("tsAustraliaDecision", "Later Phase");
+                  updateDecision("tsGeoRelease1", decisions.tsGeoRelease1.filter(x => x !== "Australia"));
+                  updateDecision("tsGeoExcluded", [...decisions.tsGeoExcluded.filter(x => x !== "Australia"), "Australia"]);
+                }}>Exclude Australia (Later)</button>
+              </div>
             </div>
           </div>
         </div>
@@ -561,41 +574,54 @@ export default function WorkshopClient({ latestSubmission, participants }) {
       chapter: "03 Tender Scout",
       title: "Which sources belong in Release 1?",
       content: (
-        <div className="animate-fade-in">
-          <p className="slide-p">Select the target portals for the first release. SAM.gov has no specified priority currently.</p>
-          <div className="submission-grid" style={{ margin: "1.5rem 0" }}>
-            {decisions.tsPortals.map((p, idx) => (
-              <div className="card" key={p.id} style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                <span className="submission-title" style={{ fontSize: "1rem" }}>{p.name}</span>
-                <span className="data-label">Questionnaire Priority: {p.priority}</span>
-                <div style={{ display: "flex", gap: "0.25rem", marginTop: "0.5rem" }}>
-                  {["Release 1", "Later", "Not Required"].map(sel => (
-                    <button 
-                      key={sel}
-                      className={`btn toggle-btn ${p.selection === sel ? "active" : ""}`}
-                      style={{ fontSize: "0.75rem", padding: "0.25rem 0.5rem" }}
-                      onClick={() => {
-                        const copy = [...decisions.tsPortals];
-                        copy[idx].selection = sel;
-                        updateDecision("tsPortals", copy);
-                      }}
-                    >
-                      {sel}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))}
+        <div className="slide-dashboard-layout">
+          <div className="dashboard-left">
+            <div className="context-box">
+              <div className="context-title">What you told us</div>
+              <p className="context-content">Portals: TED, CanadaBuys, AusTender, Compras, MercadoPublico, CPPP, SAM.gov</p>
+            </div>
+            <div className="context-box" style={{ background: "rgba(45, 212, 191, 0.05)", borderColor: "rgba(45, 212, 191, 0.2)" }}>
+              <div className="context-title" style={{ color: "var(--accent)" }}>What we need to lock today</div>
+              <p className="context-content">Select the exact target portals for the first release.</p>
+            </div>
           </div>
+          <div className="dashboard-right">
+            <h3 style={{ fontSize: "0.85rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "1rem" }}>Decision</h3>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+              {decisions.tsPortals.map((p, idx) => (
+                <div className="card" key={p.id} style={{ display: "flex", flexDirection: "column", gap: "0.5rem", padding: "1.25rem", marginBottom: 0 }}>
+                  <span className="submission-title" style={{ fontSize: "1rem", color: "var(--text-primary)" }}>{p.name}</span>
+                  <span className="data-label" style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.5)" }}>Priority: {p.priority}</span>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "0.25rem", marginTop: "0.5rem" }}>
+                    {["Release 1", "Later", "Not Required"].map(sel => (
+                      <button 
+                        key={sel}
+                        className={`btn toggle-btn ${p.selection === sel ? "active" : ""}`}
+                        style={{ fontSize: "0.75rem", padding: "0.3rem 0.5rem", flexGrow: 1, border: p.selection === sel ? "1px solid var(--accent)" : "1px solid rgba(255,255,255,0.1)", background: p.selection === sel ? "rgba(45, 212, 191, 0.1)" : "transparent", color: p.selection === sel ? "var(--text-primary)" : "var(--text-muted)" }}
+                        onClick={() => {
+                          const copy = [...decisions.tsPortals];
+                          copy[idx].selection = sel;
+                          updateDecision("tsPortals", copy);
+                        }}
+                      >
+                        {sel}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
 
-          <div className="form-group" style={{ marginTop: "1rem" }}>
-            <label style={{ fontWeight: "600" }}>Are any must-have tender sources missing from this list?</label>
-            <input 
-              type="text" 
-              value={decisions.tsMissingSources}
-              onChange={(e) => updateDecision("tsMissingSources", e.target.value)}
-              placeholder="e.g. Simap.ch (Switzerland), etc..."
-            />
+            <div className="form-group" style={{ marginTop: "1rem" }}>
+              <label style={{ fontWeight: "600", fontSize: "0.85rem" }}>Are any must-have tender sources missing from this list?</label>
+              <input 
+                type="text" 
+                value={decisions.tsMissingSources}
+                onChange={(e) => updateDecision("tsMissingSources", e.target.value)}
+                placeholder="e.g. Simap.ch (Switzerland), etc..."
+                style={{ padding: "0.5rem", border: "1px solid var(--border-color)" }}
+              />
+            </div>
           </div>
         </div>
       ),
@@ -613,71 +639,84 @@ export default function WorkshopClient({ latestSubmission, participants }) {
       chapter: "03 Tender Scout",
       title: "What should Tender Scout consider relevant?",
       content: (
-        <div className="animate-fade-in">
-          <p className="slide-p">No project types or exclusions were defined in the questionnaire. Let's establish inclusion/exclusion criteria.</p>
-          
-          <div className="grid-2" style={{ gap: "2rem", margin: "1.5rem 0" }}>
-            <div className="card">
-              <h3 style={{ color: "var(--accent)", fontSize: "1.1rem" }}>INCLUDE Opportunities</h3>
-              <ul className="slide-list-none">
-                {decisions.tsIncludes.map((inc, i) => (
-                  <li key={i} style={{ borderBottom: "1px solid var(--border-color)", paddingBottom: "0.5rem", marginBottom: "0.5rem" }}>
-                    &bull; {inc}
-                  </li>
-                ))}
-              </ul>
-              <div style={{ display: "flex", gap: "0.5rem", marginTop: "1rem" }}>
-                <input type="text" id="add-include-input" placeholder="e.g. Catenary line installations" style={{ flexGrow: 1 }} />
-                <button className="btn btn-outline" onClick={() => {
-                  const el = document.getElementById("add-include-input");
-                  if (el && el.value.trim()) {
-                    updateDecision("tsIncludes", [...decisions.tsIncludes, el.value.trim()]);
-                    el.value = "";
-                  }
-                }}>+ Add</button>
-              </div>
+        <div className="slide-dashboard-layout">
+          <div className="dashboard-left">
+            <div className="context-box">
+              <div className="context-title">What you told us</div>
+              <p className="context-content">Project types: Not explicitly defined.<br/>Exclusions: Not explicitly defined.</p>
             </div>
-
-            <div className="card">
-              <h3 style={{ color: "red", fontSize: "1.1rem" }}>EXCLUDE Opportunities</h3>
-              <ul className="slide-list-none">
-                {decisions.tsExcludes.map((exc, i) => (
-                  <li key={i} style={{ borderBottom: "1px solid var(--border-color)", paddingBottom: "0.5rem", marginBottom: "0.5rem" }}>
-                    &bull; {exc}
-                  </li>
-                ))}
-              </ul>
-              <div style={{ display: "flex", gap: "0.5rem", marginTop: "1rem" }}>
-                <input type="text" id="add-exclude-input" placeholder="e.g. Rolling stock or locomotive delivery" style={{ flexGrow: 1 }} />
-                <button className="btn btn-outline" onClick={() => {
-                  const el = document.getElementById("add-exclude-input");
-                  if (el && el.value.trim()) {
-                    updateDecision("tsExcludes", [...decisions.tsExcludes, el.value.trim()]);
-                    el.value = "";
-                  }
-                }}>+ Add</button>
-              </div>
+            <div className="context-box" style={{ background: "rgba(45, 212, 191, 0.05)", borderColor: "rgba(45, 212, 191, 0.2)" }}>
+              <div className="context-title" style={{ color: "var(--accent)" }}>What we need to lock today</div>
+              <p className="context-content">Establish the practical business definition of a useful opportunity and clear exclusion rules.</p>
             </div>
           </div>
+          <div className="dashboard-right">
+            <h3 style={{ fontSize: "0.85rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "1rem" }}>Decision</h3>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+              <div className="card" style={{ padding: "1.5rem", marginBottom: 0 }}>
+                <h3 style={{ color: "var(--accent)", fontSize: "0.9rem", marginBottom: "1rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>INCLUDE Opportunities</h3>
+                <ul className="slide-list-none">
+                  {decisions.tsIncludes.map((inc, i) => (
+                    <li key={i} style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "0.5rem", marginBottom: "0.5rem", fontSize: "0.85rem", color: "var(--text-primary)" }}>
+                      &bull; {inc}
+                    </li>
+                  ))}
+                </ul>
+                <div style={{ display: "flex", gap: "0.5rem", marginTop: "1rem" }}>
+                  <input type="text" id="add-include-input" placeholder="e.g. Catenary installations" style={{ flexGrow: 1, padding: "0.4rem 0.75rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", borderRadius: "6px" }} />
+                  <button className="btn btn-outline" style={{ padding: "0.4rem 0.75rem", borderColor: "rgba(45,212,191,0.5)", color: "var(--accent)" }} onClick={() => {
+                    const el = document.getElementById("add-include-input");
+                    if (el && el.value.trim()) {
+                      updateDecision("tsIncludes", [...decisions.tsIncludes, el.value.trim()]);
+                      el.value = "";
+                    }
+                  }}>+ Add</button>
+                </div>
+              </div>
 
-          <div className="grid-2" style={{ gap: "2rem" }}>
-            <div className="form-group">
-              <label style={{ fontWeight: "600" }}>Example of a clearly RELEVANT tender:</label>
-              <textarea 
-                value={decisions.tsExampleRelevant}
-                onChange={(e) => updateDecision("tsExampleRelevant", e.target.value)}
-                placeholder="e.g. 'Installation of 15km overhead contact lines between Zurich and Bern...'"
-                style={{ height: "60px" }}
-              />
+              <div className="card" style={{ padding: "1.5rem", marginBottom: 0 }}>
+                <h3 style={{ color: "var(--danger)", fontSize: "0.9rem", marginBottom: "1rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>EXCLUDE Opportunities</h3>
+                <ul className="slide-list-none">
+                  {decisions.tsExcludes.map((exc, i) => (
+                    <li key={i} style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "0.5rem", marginBottom: "0.5rem", fontSize: "0.85rem", color: "var(--text-primary)" }}>
+                      &bull; {exc}
+                    </li>
+                  ))}
+                </ul>
+                <div style={{ display: "flex", gap: "0.5rem", marginTop: "1rem" }}>
+                  <input type="text" id="add-exclude-input" placeholder="e.g. Rolling stock" style={{ flexGrow: 1, padding: "0.4rem 0.75rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", borderRadius: "6px" }} />
+                  <button className="btn btn-outline" style={{ padding: "0.4rem 0.75rem", borderColor: "rgba(239,68,68,0.5)", color: "var(--danger)" }} onClick={() => {
+                    const el = document.getElementById("add-exclude-input");
+                    if (el && el.value.trim()) {
+                      updateDecision("tsExcludes", [...decisions.tsExcludes, el.value.trim()]);
+                      el.value = "";
+                    }
+                  }}>+ Add</button>
+                </div>
+              </div>
             </div>
-            <div className="form-group">
-              <label style={{ fontWeight: "600" }}>Example of a clearly IRRELEVANT tender:</label>
-              <textarea 
-                value={decisions.tsExampleIrrelevant}
-                onChange={(e) => updateDecision("tsExampleIrrelevant", e.target.value)}
-                placeholder="e.g. 'Delivery of 10 new electric locomotives...'"
-                style={{ height: "60px" }}
-              />
+
+            <div className="card" style={{ padding: "1.5rem" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label style={{ fontWeight: "500", fontSize: "0.8rem", color: "var(--accent)" }}>Example of RELEVANT tender:</label>
+                  <textarea 
+                    value={decisions.tsExampleRelevant}
+                    onChange={(e) => updateDecision("tsExampleRelevant", e.target.value)}
+                    placeholder="e.g. 'Installation of 15km overhead contact lines between Zurich and Bern...'"
+                    style={{ height: "60px", border: "1px solid rgba(45,212,191,0.2)", background: "rgba(45,212,191,0.05)", color: "var(--text-primary)" }}
+                  />
+                </div>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label style={{ fontWeight: "500", fontSize: "0.8rem", color: "var(--danger)" }}>Example of IRRELEVANT tender:</label>
+                  <textarea 
+                    value={decisions.tsExampleIrrelevant}
+                    onChange={(e) => updateDecision("tsExampleIrrelevant", e.target.value)}
+                    placeholder="e.g. 'Delivery of 10 new electric locomotives...'"
+                    style={{ height: "60px", border: "1px solid rgba(239,68,68,0.2)", background: "rgba(239,68,68,0.05)", color: "var(--text-primary)" }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -696,55 +735,69 @@ export default function WorkshopClient({ latestSubmission, participants }) {
       chapter: "03 Tender Scout",
       title: "How should Tender Scout recognize opportunities?",
       content: (
-        <div className="animate-fade-in">
-          <p className="slide-p">Categorize the draft terminology to establish the search taxonomy.</p>
-          
-          <div className="grid-3" style={{ gap: "1rem", margin: "1.5rem 0" }}>
-            <div className="card">
-              <h4 style={{ color: "var(--accent)", fontSize: "0.9rem", marginBottom: "0.5rem" }}>Strong Signals</h4>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
-                {decisions.tsKeywordsStrong.map(k => (
-                  <span key={k} className="participant-pill" style={{ cursor: "pointer", border: "1px solid var(--accent)" }} onClick={() => {
-                    updateDecision("tsKeywordsStrong", decisions.tsKeywordsStrong.filter(x => x !== k));
-                    updateDecision("tsKeywordsSupporting", [...decisions.tsKeywordsSupporting, k]);
-                  }}>{k} &rarr;</span>
-                ))}
-              </div>
+        <div className="slide-dashboard-layout">
+          <div className="dashboard-left">
+            <div className="context-box">
+              <div className="context-title">What you told us</div>
+              <p className="context-content">Core domain terms: Rail, Catenary, Trolleybus, Light rail, Tram.<br/><br/>Technical terms: Cantilever / Ausleger, Fahrdraht / Contact Wire.</p>
             </div>
-
-            <div className="card">
-              <h4 style={{ color: "var(--text-secondary)", fontSize: "0.9rem", marginBottom: "0.5rem" }}>Supporting Signals</h4>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
-                {decisions.tsKeywordsSupporting.map(k => (
-                  <span key={k} className="participant-pill" style={{ cursor: "pointer" }} onClick={() => {
-                    updateDecision("tsKeywordsSupporting", decisions.tsKeywordsSupporting.filter(x => x !== k));
-                    updateDecision("tsKeywordsExcluded", [...decisions.tsKeywordsExcluded, k]);
-                  }}>{k} &rarr;</span>
-                ))}
-              </div>
-            </div>
-
-            <div className="card">
-              <h4 style={{ color: "red", fontSize: "0.9rem", marginBottom: "0.5rem" }}>Exclusion terms</h4>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
-                {decisions.tsKeywordsExcluded.map(k => (
-                  <span key={k} className="participant-pill" style={{ cursor: "pointer", opacity: 0.6 }} onClick={() => {
-                    updateDecision("tsKeywordsExcluded", decisions.tsKeywordsExcluded.filter(x => x !== k));
-                    updateDecision("tsKeywordsStrong", [...decisions.tsKeywordsStrong, k]);
-                  }}>{k} &rarr;</span>
-                ))}
-              </div>
+            <div className="context-box" style={{ background: "rgba(45, 212, 191, 0.05)", borderColor: "rgba(45, 212, 191, 0.2)" }}>
+              <div className="context-title" style={{ color: "var(--accent)" }}>What we need to lock today</div>
+              <p className="context-content">Categorize the draft terminology to establish the initial recognition logic.</p>
             </div>
           </div>
+          <div className="dashboard-right">
+            <h3 style={{ fontSize: "0.85rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "1rem" }}>Decision</h3>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", marginBottom: "1rem" }}>
+              <div className="card" style={{ padding: "1.25rem", marginBottom: 0 }}>
+                <h4 style={{ color: "var(--accent)", fontSize: "0.85rem", marginBottom: "0.75rem", textTransform: "uppercase" }}>Strong Signals</h4>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
+                  {decisions.tsKeywordsStrong.map(k => (
+                    <span key={k} className="participant-pill" style={{ cursor: "pointer", border: "1px solid var(--accent)", background: "rgba(45,212,191,0.1)", color: "var(--text-primary)", fontSize: "0.75rem", padding: "0.25rem 0.5rem" }} onClick={() => {
+                      updateDecision("tsKeywordsStrong", decisions.tsKeywordsStrong.filter(x => x !== k));
+                      updateDecision("tsKeywordsSupporting", [...decisions.tsKeywordsSupporting, k]);
+                    }}>{k} &rarr;</span>
+                  ))}
+                </div>
+              </div>
 
-          <div className="form-group">
-            <label style={{ fontWeight: "600" }}>Are important synonyms, translations, or technical terms missing?</label>
-            <input 
-              type="text" 
-              value={decisions.tsKeywordSynonyms}
-              onChange={(e) => updateDecision("tsKeywordSynonyms", e.target.value)}
-              placeholder="e.g. Oberleitung (German), Caténaire (French)..."
-            />
+              <div className="card" style={{ padding: "1.25rem", marginBottom: 0 }}>
+                <h4 style={{ color: "var(--text-secondary)", fontSize: "0.85rem", marginBottom: "0.75rem", textTransform: "uppercase" }}>Supporting</h4>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
+                  {decisions.tsKeywordsSupporting.map(k => (
+                    <span key={k} className="participant-pill" style={{ cursor: "pointer", border: "1px solid rgba(255,255,255,0.1)", color: "var(--text-primary)", fontSize: "0.75rem", padding: "0.25rem 0.5rem" }} onClick={() => {
+                      updateDecision("tsKeywordsSupporting", decisions.tsKeywordsSupporting.filter(x => x !== k));
+                      updateDecision("tsKeywordsExcluded", [...decisions.tsKeywordsExcluded, k]);
+                    }}>{k} &rarr;</span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="card" style={{ padding: "1.25rem", marginBottom: 0 }}>
+                <h4 style={{ color: "var(--danger)", fontSize: "0.85rem", marginBottom: "0.75rem", textTransform: "uppercase" }}>Exclusion</h4>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
+                  {decisions.tsKeywordsExcluded.map(k => (
+                    <span key={k} className="participant-pill" style={{ cursor: "pointer", opacity: 0.6, border: "1px solid rgba(255,255,255,0.05)", background: "rgba(0,0,0,0.2)", color: "var(--text-muted)", fontSize: "0.75rem", padding: "0.25rem 0.5rem" }} onClick={() => {
+                      updateDecision("tsKeywordsExcluded", decisions.tsKeywordsExcluded.filter(x => x !== k));
+                      updateDecision("tsKeywordsStrong", [...decisions.tsKeywordsStrong, k]);
+                    }}>{k} &rarr;</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="card" style={{ padding: "1.25rem" }}>
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label style={{ fontWeight: "500", fontSize: "0.8rem", color: "var(--text-secondary)" }}>Are important synonyms, translations, or technical terms missing?</label>
+                <input 
+                  type="text" 
+                  value={decisions.tsKeywordSynonyms}
+                  onChange={(e) => updateDecision("tsKeywordSynonyms", e.target.value)}
+                  placeholder="e.g. Oberleitung (German), Caténaire (French)..."
+                  style={{ padding: "0.5rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", marginTop: "0.5rem" }}
+                />
+              </div>
+            </div>
           </div>
         </div>
       ),
@@ -762,31 +815,47 @@ export default function WorkshopClient({ latestSubmission, participants }) {
       chapter: "03 Tender Scout",
       title: "Should major contractors / market players be tracked?",
       content: (
-        <div className="animate-fade-in">
-          <p className="slide-p">No contractors were specified in the questionnaire. Do we need prime contractor tracking for sub-contracting alerts?</p>
-          <div style={{ display: "flex", gap: "1rem", margin: "1.5rem 0" }}>
-            {["Yes — important for Release 1", "Useful later", "Not required"].map(opt => (
-              <button 
-                key={opt}
-                className={`btn ${decisions.tsTrackContractors === opt ? "btn-primary" : "btn-outline"}`}
-                onClick={() => updateDecision("tsTrackContractors", opt)}
-              >
-                {opt}
-              </button>
-            ))}
-          </div>
-
-          {decisions.tsTrackContractors === "Yes — important for Release 1" && (
-            <div className="form-group animate-fade-in">
-              <label style={{ fontWeight: "600" }}>Which contractors should form the initial watchlist?</label>
-              <textarea 
-                value={decisions.tsContractorWatchlist}
-                onChange={(e) => updateDecision("tsContractorWatchlist", e.target.value)}
-                placeholder="e.g. Siemens Mobility, Alstom, Colas Rail..."
-                style={{ height: "80px" }}
-              />
+        <div className="slide-dashboard-layout">
+          <div className="dashboard-left">
+            <div className="context-box">
+              <div className="context-title">What you told us</div>
+              <p className="context-content">No contractors were specified in the questionnaire.</p>
             </div>
-          )}
+            <div className="context-box" style={{ background: "rgba(45, 212, 191, 0.05)", borderColor: "rgba(45, 212, 191, 0.2)" }}>
+              <div className="context-title" style={{ color: "var(--accent)" }}>What we need to lock today</div>
+              <p className="context-content">Decide if tracking prime contractors for sub-contracting opportunities is required for Release 1.</p>
+            </div>
+          </div>
+          <div className="dashboard-right">
+            <h3 style={{ fontSize: "0.85rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "1rem" }}>Decision</h3>
+            <div className="card" style={{ padding: "1.5rem" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.5rem" }}>
+                {["Yes — important for Release 1", "Useful later", "Not required"].map(opt => (
+                  <button 
+                    key={opt}
+                    className={`btn toggle-btn ${decisions.tsTrackContractors === opt ? "active" : ""}`}
+                    style={{ border: decisions.tsTrackContractors === opt ? "1px solid var(--accent)" : "1px solid rgba(255,255,255,0.1)", background: decisions.tsTrackContractors === opt ? "rgba(45, 212, 191, 0.1)" : "transparent", color: decisions.tsTrackContractors === opt ? "var(--text-primary)" : "var(--text-muted)", padding: "0.75rem", fontSize: "0.8rem" }}
+                    onClick={() => updateDecision("tsTrackContractors", opt)}
+                  >
+                    {decisions.tsTrackContractors === opt && <span style={{ marginRight: "0.5rem", color: "var(--accent)" }}>✓</span>}
+                    {opt}
+                  </button>
+                ))}
+              </div>
+
+              {decisions.tsTrackContractors === "Yes — important for Release 1" && (
+                <div className="form-group animate-fade-in" style={{ marginTop: "1.5rem", marginBottom: 0 }}>
+                  <label style={{ fontWeight: "500", fontSize: "0.8rem", color: "var(--text-secondary)" }}>Which contractors should form the initial watchlist?</label>
+                  <textarea 
+                    value={decisions.tsContractorWatchlist}
+                    onChange={(e) => updateDecision("tsContractorWatchlist", e.target.value)}
+                    placeholder="e.g. Siemens Mobility, Alstom, Colas Rail..."
+                    style={{ height: "80px", marginTop: "0.5rem", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--text-primary)" }}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       ),
       facilitator: {
@@ -803,67 +872,82 @@ export default function WorkshopClient({ latestSubmission, participants }) {
       chapter: "03 Tender Scout",
       title: "What should the sales team receive?",
       content: (
-        <div className="animate-fade-in">
-          <p className="slide-p">Determine the alert experience, frequency, and Release 1 deliverables.</p>
-          
-          <div className="submission-grid" style={{ margin: "1.5rem 0" }}>
-            <div className="card" style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-              <span className="data-label">Primary Experience</span>
-              <div style={{ display: "flex", gap: "0.5rem" }}>
-                {["Dashboard", "Email Digest", "Both"].map(opt => (
-                  <button 
-                    key={opt} 
-                    className={`btn toggle-btn ${decisions.tsOutputExperience === opt ? "active" : ""}`}
-                    onClick={() => updateDecision("tsOutputExperience", opt)}
-                    style={{ fontSize: "0.8rem", padding: "0.3rem 0.6rem" }}
-                  >
-                    {opt}
-                  </button>
-                ))}
+        <div className="slide-dashboard-layout">
+          <div className="dashboard-left">
+            <div className="context-box">
+              <div className="context-title">What you told us</div>
+              <p className="context-content">Needs for reporting and tracking.</p>
+            </div>
+            <div className="context-box" style={{ background: "rgba(45, 212, 191, 0.05)", borderColor: "rgba(45, 212, 191, 0.2)" }}>
+              <div className="context-title" style={{ color: "var(--accent)" }}>What we need to lock today</div>
+              <p className="context-content">Determine the alert experience, frequency, and Release 1 deliverables.</p>
+            </div>
+          </div>
+          <div className="dashboard-right">
+            <h3 style={{ fontSize: "0.85rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "1rem" }}>Decision</h3>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+              <div className="card" style={{ padding: "1.5rem", marginBottom: 0, display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                <span className="data-label" style={{ fontSize: "0.75rem", color: "var(--text-muted)", textTransform: "uppercase" }}>Primary Experience</span>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+                  {["Dashboard", "Email Digest", "Both"].map(opt => (
+                    <button 
+                      key={opt} 
+                      className={`btn toggle-btn ${decisions.tsOutputExperience === opt ? "active" : ""}`}
+                      onClick={() => updateDecision("tsOutputExperience", opt)}
+                      style={{ fontSize: "0.8rem", padding: "0.5rem", flexGrow: 1, border: decisions.tsOutputExperience === opt ? "1px solid var(--accent)" : "1px solid rgba(255,255,255,0.1)", background: decisions.tsOutputExperience === opt ? "rgba(45, 212, 191, 0.1)" : "transparent", color: decisions.tsOutputExperience === opt ? "var(--text-primary)" : "var(--text-muted)" }}
+                    >
+                      {opt}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="card" style={{ padding: "1.5rem", marginBottom: 0, display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                <span className="data-label" style={{ fontSize: "0.75rem", color: "var(--text-muted)", textTransform: "uppercase" }}>Cadence / Frequency</span>
+                <select 
+                  value={decisions.tsAlertFrequency}
+                  onChange={(e) => updateDecision("tsAlertFrequency", e.target.value)}
+                  style={{ background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.1)", padding: "0.6rem", borderRadius: "6px", color: "var(--text-primary)", fontSize: "0.85rem" }}
+                >
+                  <option value="Real-time">Real-time</option>
+                  <option value="Daily">Daily</option>
+                  <option value="Weekly">Weekly</option>
+                </select>
               </div>
             </div>
 
-            <div className="card" style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-              <span className="data-label">Alert Recipient</span>
-              <input 
-                type="text" 
-                value={decisions.tsAlertRecipient}
-                onChange={(e) => updateDecision("tsAlertRecipient", e.target.value)}
-                placeholder="e.g. Sales Team"
-                style={{ marginTop: "0.25rem" }}
-              />
+            <div className="card" style={{ padding: "1.5rem", marginBottom: "1rem" }}>
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label style={{ fontWeight: "500", fontSize: "0.85rem", color: "var(--text-primary)", display: "block", marginBottom: "0.5rem" }}>Alert Recipient(s)</label>
+                <input 
+                  type="text" 
+                  value={decisions.tsAlertRecipient}
+                  onChange={(e) => updateDecision("tsAlertRecipient", e.target.value)}
+                  placeholder="e.g. Sales Team"
+                  style={{ padding: "0.6rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", borderRadius: "6px" }}
+                />
+              </div>
             </div>
 
-            <div className="card" style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-              <span className="data-label">Cadence / Frequency</span>
-              <select 
-                value={decisions.tsAlertFrequency}
-                onChange={(e) => updateDecision("tsAlertFrequency", e.target.value)}
-                style={{ background: "#0a0a0a", border: "1px solid var(--border-color)", padding: "0.5rem", borderRadius: "6px", color: "var(--text-primary)" }}
-              >
-                <option value="Real-time">Real-time</option>
-                <option value="Daily">Daily</option>
-                <option value="Weekly">Weekly</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="grid-2" style={{ gap: "2rem" }}>
-            <div className="form-group">
-              <label style={{ fontWeight: "600" }}>Release 1 must-haves for Tender Scout output:</label>
-              <textarea 
-                value={decisions.tsMustHaves}
-                onChange={(e) => updateDecision("tsMustHaves", e.target.value)}
-                style={{ height: "60px" }}
-              />
-            </div>
-            <div className="form-group">
-              <label style={{ fontWeight: "600" }}>Useful later (Nice-to-haves):</label>
-              <textarea 
-                value={decisions.tsNiceToHaves}
-                onChange={(e) => updateDecision("tsNiceToHaves", e.target.value)}
-                style={{ height: "60px" }}
-              />
+            <div className="card" style={{ padding: "1.5rem" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label style={{ fontWeight: "500", fontSize: "0.85rem", color: "var(--accent)", display: "block", marginBottom: "0.5rem" }}>Release 1 must-haves:</label>
+                  <textarea 
+                    value={decisions.tsMustHaves}
+                    onChange={(e) => updateDecision("tsMustHaves", e.target.value)}
+                    style={{ height: "60px", padding: "0.75rem", border: "1px solid rgba(45,212,191,0.2)", background: "rgba(45,212,191,0.05)", color: "var(--text-primary)", borderRadius: "6px" }}
+                  />
+                </div>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label style={{ fontWeight: "500", fontSize: "0.85rem", color: "var(--text-muted)", display: "block", marginBottom: "0.5rem" }}>Useful later (Nice-to-haves):</label>
+                  <textarea 
+                    value={decisions.tsNiceToHaves}
+                    onChange={(e) => updateDecision("tsNiceToHaves", e.target.value)}
+                    style={{ height: "60px", padding: "0.75rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", borderRadius: "6px" }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -882,36 +966,51 @@ export default function WorkshopClient({ latestSubmission, participants }) {
       chapter: "03 Tender Scout",
       title: "Tender Scout Baseline Playback",
       content: (
-        <div className="animate-fade-in">
-          <p className="slide-p">Please review and confirm the Tender Scout implementation baseline.</p>
-          <div className="submission-grid" style={{ margin: "2rem 0" }}>
-            <div className="card">
-              <span className="data-label">Regions (Release 1)</span>
-              <p className="data-value" style={{ margin: "0.25rem 0 0 0", fontSize: "0.95rem" }}>
-                {decisions.tsGeoRelease1.join(", ") || "—"}
-              </p>
+        <div className="slide-dashboard-layout">
+          <div className="dashboard-left">
+            <div className="context-box">
+              <div className="context-title">What you told us</div>
+              <p className="context-content">The Tender Scout baseline has been built during the workshop.</p>
             </div>
-            <div className="card">
-              <span className="data-label">Selected Sources</span>
-              <p className="data-value" style={{ margin: "0.25rem 0 0 0", fontSize: "0.95rem" }}>
-                {decisions.tsPortals.filter(p => p.selection === "Release 1").map(p => p.id).join(", ") || "—"}
-              </p>
-            </div>
-            <div className="card">
-              <span className="data-label">Core Terminology</span>
-              <p className="data-value" style={{ margin: "0.25rem 0 0 0", fontSize: "0.95rem" }}>
-                {decisions.tsKeywordsStrong.slice(0, 4).join(", ") || "—"} (+ others)
-              </p>
+            <div className="context-box" style={{ background: "rgba(45, 212, 191, 0.05)", borderColor: "rgba(45, 212, 191, 0.2)" }}>
+              <div className="context-title" style={{ color: "var(--accent)" }}>What we need to lock today</div>
+              <p className="context-content">Please review and confirm the Tender Scout implementation baseline.</p>
             </div>
           </div>
+          <div className="dashboard-right">
+            <div className="card" style={{ padding: "1.5rem" }}>
+              <h3 style={{ fontSize: "1rem", color: "var(--accent)", marginBottom: "1rem" }}>Baseline Overview</h3>
+              <div style={{ display: "grid", gap: "1rem" }}>
+                <div style={{ background: "rgba(255,255,255,0.02)", padding: "1rem", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.05)" }}>
+                  <span className="data-label" style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase", display: "block", marginBottom: "0.25rem" }}>Regions (Release 1)</span>
+                  <p className="data-value" style={{ margin: 0, fontSize: "0.95rem", color: "var(--text-primary)" }}>
+                    {decisions.tsGeoRelease1.join(", ") || "—"}
+                  </p>
+                </div>
+                <div style={{ background: "rgba(255,255,255,0.02)", padding: "1rem", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.05)" }}>
+                  <span className="data-label" style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase", display: "block", marginBottom: "0.25rem" }}>Selected Sources</span>
+                  <p className="data-value" style={{ margin: 0, fontSize: "0.95rem", color: "var(--text-primary)" }}>
+                    {decisions.tsPortals.filter(p => p.selection === "Release 1").map(p => p.id).join(", ") || "—"}
+                  </p>
+                </div>
+                <div style={{ background: "rgba(255,255,255,0.02)", padding: "1rem", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.05)" }}>
+                  <span className="data-label" style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase", display: "block", marginBottom: "0.25rem" }}>Core Terminology</span>
+                  <p className="data-value" style={{ margin: 0, fontSize: "0.95rem", color: "var(--text-primary)" }}>
+                    {decisions.tsKeywordsStrong.slice(0, 4).join(", ") || "—"} (+ others)
+                  </p>
+                </div>
+              </div>
+            </div>
 
-          <div style={{ marginTop: "2rem", borderTop: "1px solid var(--border-color)", paddingTop: "1.5rem" }}>
-            <button 
-              className={`btn ${decisions.tsGeoStatus === "Confirmed" ? "btn-primary" : "btn-outline"}`}
-              onClick={() => updateDecision("tsGeoStatus", "Confirmed")}
-            >
-              {decisions.tsGeoStatus === "Confirmed" ? "✓ Tender Scout baseline confirmed" : "Confirm Tender Scout Baseline"}
-            </button>
+            <div style={{ marginTop: "1rem" }}>
+              <button 
+                className="btn toggle-btn"
+                onClick={() => updateDecision("tsGeoStatus", "Confirmed")}
+                style={{ width: "100%", padding: "1rem", fontSize: "1rem", border: decisions.tsGeoStatus === "Confirmed" ? "1px solid var(--accent)" : "1px solid rgba(255,255,255,0.2)", background: decisions.tsGeoStatus === "Confirmed" ? "rgba(45, 212, 191, 0.1)" : "rgba(255,255,255,0.05)", color: decisions.tsGeoStatus === "Confirmed" ? "var(--text-primary)" : "var(--text-muted)" }}
+              >
+                {decisions.tsGeoStatus === "Confirmed" ? "✓ Tender Scout baseline confirmed" : "Confirm Tender Scout Baseline"}
+              </button>
+            </div>
           </div>
         </div>
       ),
@@ -930,33 +1029,30 @@ export default function WorkshopClient({ latestSubmission, participants }) {
       chapter: "04 Innovation Radar",
       title: "Innovation Radar — Current input",
       content: (
-        <div className="animate-fade-in">
-          <p className="slide-p">What we validated from your questionnaire preparation:</p>
-          <div className="submission-grid" style={{ margin: "1.5rem 0" }}>
-            <div className="card">
-              <span className="data-label">Competitors</span>
-              <p className="data-value" style={{ margin: "0.25rem 0 0 0", fontSize: "0.9rem" }}>
-                Elektroline, Furrer + Frey, Arthur Flury, Alstom, Siemens, SPL Powerlines (All High)
-              </p>
+        <div className="slide-dashboard-layout">
+          <div className="dashboard-left">
+            <div className="context-box">
+              <div className="context-title">What you told us</div>
+              <p className="context-content">Competitors: Elektroline, Furrer + Frey, Arthur Flury, Alstom, Siemens, SPL Powerlines (All High)<br/><br/>Technology themes: De-icing systems, Catenary systems (High), Trolleybuses, Light rail, Overhead lines<br/><br/>Market & Resources: Infrastructure (High), Copper (High), Aluminium (Medium)</p>
             </div>
-            <div className="card">
-              <span className="data-label">Initial Technology themes</span>
-              <p className="data-value" style={{ margin: "0.25rem 0 0 0", fontSize: "0.9rem" }}>
-                De-icing systems, Catenary systems (High) <br />
-                Trolleybuses, Light rail, Overhead lines
-              </p>
-            </div>
-            <div className="card">
-              <span className="data-label">Market & Resources</span>
-              <p className="data-value" style={{ margin: "0.25rem 0 0 0", fontSize: "0.9rem" }}>
-                Infrastructure (High) <br />
-                Copper (High) · Aluminium (Medium)
-              </p>
+            <div className="context-box" style={{ background: "rgba(45, 212, 191, 0.05)", borderColor: "rgba(45, 212, 191, 0.2)" }}>
+              <div className="context-title" style={{ color: "var(--accent)" }}>What we need to lock today</div>
+              <p className="context-content">Define competitor signals, technology scope expansion, actionable market trends, alert cadences, and source watchlists.</p>
             </div>
           </div>
-
-          <div className="highlight-box">
-            <strong>Today we need to define:</strong> Competitor signals · Technology scope expansion · Actionable market trends · Alert cadences · Source watchlists
+          <div className="dashboard-right">
+            <div className="highlight-box" style={{ background: "rgba(45, 212, 191, 0.1)", border: "1px solid rgba(45, 212, 191, 0.2)", borderRadius: "8px", padding: "1.5rem" }}>
+              <h3 style={{ color: "var(--text-primary)", marginBottom: "1rem", fontSize: "1rem" }}>Today's Objective</h3>
+              <p style={{ color: "var(--text-secondary)", fontSize: "0.9rem", lineHeight: "1.6", margin: 0 }}>
+                We will now map out the Innovation Radar parameters to track industry movements beyond just tenders. We will break this down into:
+              </p>
+              <ul style={{ color: "var(--accent)", fontSize: "0.9rem", marginTop: "1rem", paddingLeft: "1.5rem", lineHeight: "1.8" }}>
+                <li>Competitor Intelligence</li>
+                <li>Technology Monitoring</li>
+                <li>Market & Legislation</li>
+                <li>Resources & Supply Chain</li>
+              </ul>
+            </div>
           </div>
         </div>
       ),
@@ -974,53 +1070,67 @@ export default function WorkshopClient({ latestSubmission, participants }) {
       chapter: "04 Innovation Radar",
       title: "What should we actually monitor about competitors?",
       content: (
-        <div className="animate-fade-in">
-          <p className="slide-p">The competitors are known. Select which specific categories of development matter to K+M.</p>
-          
-          <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", margin: "1.5rem 0" }}>
-            {["New products/technologies", "Major projects", "Partnerships", "Strategic announcements", "Market expansion"].map(dev => {
-              const isSelected = decisions.irCompetitorDevelopments.includes(dev);
-              return (
-                <button 
-                  key={dev} 
-                  className={`btn toggle-btn ${isSelected ? "active" : ""}`}
-                  onClick={() => {
-                    if (isSelected) {
-                      updateDecision("irCompetitorDevelopments", decisions.irCompetitorDevelopments.filter(x => x !== dev));
-                    } else {
-                      updateDecision("irCompetitorDevelopments", [...decisions.irCompetitorDevelopments, dev]);
-                    }
-                  }}
-                >
-                  {dev}
-                </button>
-              );
-            })}
+        <div className="slide-dashboard-layout">
+          <div className="dashboard-left">
+            <div className="context-box">
+              <div className="context-title">What you told us</div>
+              <p className="context-content">Competitors: Elektroline, Furrer + Frey, Arthur Flury, Alstom, Siemens, SPL Powerlines (All High)</p>
+            </div>
+            <div className="context-box" style={{ background: "rgba(45, 212, 191, 0.05)", borderColor: "rgba(45, 212, 191, 0.2)" }}>
+              <div className="context-title" style={{ color: "var(--accent)" }}>What we need to lock today</div>
+              <p className="context-content">Select which specific categories of development matter to K+M, and determine if there is a Tier 1 subset.</p>
+            </div>
           </div>
+          <div className="dashboard-right">
+            <h3 style={{ fontSize: "0.85rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "1rem" }}>Decision</h3>
+            <div className="card" style={{ padding: "1.5rem" }}>
+              <h4 style={{ fontSize: "0.9rem", marginBottom: "0.75rem", color: "var(--text-primary)" }}>Signal Categories</h4>
+              <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "1.5rem" }}>
+                {["New products/technologies", "Major projects", "Partnerships", "Strategic announcements", "Market expansion"].map(dev => {
+                  const isSelected = decisions.irCompetitorDevelopments.includes(dev);
+                  return (
+                    <button 
+                      key={dev} 
+                      className={`btn toggle-btn ${isSelected ? "active" : ""}`}
+                      style={{ border: isSelected ? "1px solid var(--accent)" : "1px solid rgba(255,255,255,0.1)", background: isSelected ? "rgba(45, 212, 191, 0.1)" : "rgba(255,255,255,0.05)", color: isSelected ? "var(--text-primary)" : "var(--text-secondary)", padding: "0.4rem 0.75rem", fontSize: "0.8rem", borderRadius: "6px" }}
+                      onClick={() => {
+                        if (isSelected) {
+                          updateDecision("irCompetitorDevelopments", decisions.irCompetitorDevelopments.filter(x => x !== dev));
+                        } else {
+                          updateDecision("irCompetitorDevelopments", [...decisions.irCompetitorDevelopments, dev]);
+                        }
+                      }}
+                    >
+                      {isSelected && <span style={{ marginRight: "0.5rem", color: "var(--accent)" }}>✓</span>}
+                      {dev}
+                    </button>
+                  );
+                })}
+              </div>
 
-          <div className="card" style={{ marginTop: "1rem" }}>
-            <h4 style={{ fontSize: "1rem", marginBottom: "0.75rem" }}>Priority Refinement</h4>
-            <label style={{ fontSize: "0.85rem", fontWeight: "600", display: "block", marginBottom: "0.5rem" }}>
-              Are these competitors genuinely equal priority, or should there be a smaller Tier 1 group?
-            </label>
-            <div style={{ display: "flex", gap: "1rem" }}>
-              {decisions.irCompetitors.map((comp, idx) => (
-                <div key={comp.name} style={{ display: "flex", flexDirection: "column", gap: "0.25rem", padding: "0.5rem", background: "rgba(255,255,255,0.02)", border: "1px solid var(--border-color)", borderRadius: "6px" }}>
-                  <span style={{ fontSize: "0.85rem", fontWeight: "600" }}>{comp.name}</span>
-                  <select 
-                    value={comp.tier}
-                    onChange={(e) => {
-                      const copy = [...decisions.irCompetitors];
-                      copy[idx].tier = e.target.value;
-                      updateDecision("irCompetitors", copy);
-                    }}
-                    style={{ fontSize: "0.75rem", background: "#0a0a0a", color: "var(--text-primary)", border: "1px solid var(--border-color)", padding: "0.15rem" }}
-                  >
-                    <option value="Tier 1">Tier 1</option>
-                    <option value="Tier 2">Tier 2</option>
-                  </select>
-                </div>
-              ))}
+              <h4 style={{ fontSize: "0.9rem", marginBottom: "0.5rem", color: "var(--text-primary)" }}>Priority Refinement</h4>
+              <label style={{ fontSize: "0.75rem", fontWeight: "500", display: "block", marginBottom: "1rem", color: "var(--text-muted)" }}>
+                Are these competitors genuinely equal priority, or should there be a smaller Tier 1 group?
+              </label>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
+                {decisions.irCompetitors.map((comp, idx) => (
+                  <div key={comp.name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0.75rem 1rem", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "6px" }}>
+                    <span style={{ fontSize: "0.85rem", fontWeight: "500", color: "var(--text-primary)" }}>{comp.name}</span>
+                    <select 
+                      value={comp.tier}
+                      onChange={(e) => {
+                        const copy = [...decisions.irCompetitors];
+                        copy[idx].tier = e.target.value;
+                        updateDecision("irCompetitors", copy);
+                      }}
+                      style={{ fontSize: "0.75rem", background: "rgba(0,0,0,0.3)", color: "var(--text-primary)", border: "1px solid rgba(255,255,255,0.1)", padding: "0.3rem", borderRadius: "4px" }}
+                    >
+                      <option value="Tier 1">Tier 1</option>
+                      <option value="Tier 2">Tier 2</option>
+                    </select>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -1039,74 +1149,86 @@ export default function WorkshopClient({ latestSubmission, participants }) {
       chapter: "04 Innovation Radar",
       title: "Which technologies should Innovation Radar watch?",
       content: (
-        <div className="animate-fade-in">
-          <p className="slide-p">K+M indicated that "lot more will come in workshop". Review, refine priorities, and add new topics.</p>
-          
-          <div className="data-table-wrapper" style={{ margin: "1.5rem 0" }}>
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Technology Topic</th>
-                  <th>Priority</th>
-                  <th>Scope Selection</th>
-                </tr>
-              </thead>
-              <tbody>
-                {decisions.irTechTopics.map((tech, idx) => (
-                  <tr key={tech.name}>
-                    <td style={{ fontWeight: "600" }}>{tech.name}</td>
-                    <td>
-                      <select 
-                        value={tech.priority}
-                        onChange={(e) => {
-                          const copy = [...decisions.irTechTopics];
-                          copy[idx].priority = e.target.value;
-                          updateDecision("irTechTopics", copy);
-                        }}
-                        style={{ background: "#0a0a0a", border: "1px solid var(--border-color)", color: "#fff", padding: "0.2rem" }}
-                      >
-                        <option value="High">High</option>
-                        <option value="Medium">Medium</option>
-                        <option value="Low">Low</option>
-                      </select>
-                    </td>
-                    <td>
-                      <div style={{ display: "flex", gap: "0.25rem" }}>
-                        {["Release 1", "Later"].map(sel => (
-                          <button 
-                            key={sel}
-                            className={`btn toggle-btn ${tech.selection === sel ? "active" : ""}`}
-                            style={{ fontSize: "0.75rem", padding: "0.15rem 0.4rem" }}
-                            onClick={() => {
-                              const copy = [...decisions.irTechTopics];
-                              copy[idx].selection = sel;
-                              updateDecision("irTechTopics", copy);
-                            }}
-                          >
-                            {sel}
-                          </button>
-                        ))}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <div className="slide-dashboard-layout">
+          <div className="dashboard-left">
+            <div className="context-box">
+              <div className="context-title">What you told us</div>
+              <p className="context-content">Themes: De-icing systems, Catenary systems (High). Trolleybuses, Light rail (Medium).</p>
+            </div>
+            <div className="context-box" style={{ background: "rgba(45, 212, 191, 0.05)", borderColor: "rgba(45, 212, 191, 0.2)" }}>
+              <div className="context-title" style={{ color: "var(--accent)" }}>What we need to lock today</div>
+              <p className="context-content">Review, refine priorities, and add the new missing topics you noted.</p>
+            </div>
           </div>
+          <div className="dashboard-right">
+            <h3 style={{ fontSize: "0.85rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "1rem" }}>Decision</h3>
+            <div className="data-table-wrapper" style={{ margin: "0 0 1rem 0", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", overflow: "hidden", background: "var(--card-bg)" }}>
+              <table className="data-table" style={{ width: "100%", borderCollapse: "collapse" }}>
+                <thead>
+                  <tr style={{ background: "rgba(255,255,255,0.05)", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+                    <th style={{ padding: "0.75rem", textAlign: "left", color: "var(--text-secondary)", fontSize: "0.8rem", fontWeight: "600" }}>Technology Topic</th>
+                    <th style={{ padding: "0.75rem", textAlign: "left", color: "var(--text-secondary)", fontSize: "0.8rem", fontWeight: "600" }}>Priority</th>
+                    <th style={{ padding: "0.75rem", textAlign: "left", color: "var(--text-secondary)", fontSize: "0.8rem", fontWeight: "600" }}>Scope</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {decisions.irTechTopics.map((tech, idx) => (
+                    <tr key={tech.name} style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                      <td style={{ fontWeight: "500", padding: "0.75rem", color: "var(--text-primary)", fontSize: "0.9rem" }}>{tech.name}</td>
+                      <td style={{ padding: "0.75rem" }}>
+                        <select 
+                          value={tech.priority}
+                          onChange={(e) => {
+                            const copy = [...decisions.irTechTopics];
+                            copy[idx].priority = e.target.value;
+                            updateDecision("irTechTopics", copy);
+                          }}
+                          style={{ background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--text-primary)", padding: "0.4rem", borderRadius: "4px", fontSize: "0.8rem" }}
+                        >
+                          <option value="High">High</option>
+                          <option value="Medium">Medium</option>
+                          <option value="Low">Low</option>
+                        </select>
+                      </td>
+                      <td style={{ padding: "0.75rem" }}>
+                        <div style={{ display: "flex", gap: "0.25rem" }}>
+                          {["Release 1", "Later"].map(sel => (
+                            <button 
+                              key={sel}
+                              className={`btn toggle-btn ${tech.selection === sel ? "active" : ""}`}
+                              style={{ fontSize: "0.75rem", padding: "0.3rem 0.5rem", border: tech.selection === sel ? "1px solid var(--accent)" : "1px solid rgba(255,255,255,0.1)", background: tech.selection === sel ? "rgba(45,212,191,0.1)" : "transparent", color: tech.selection === sel ? "var(--text-primary)" : "var(--text-muted)", borderRadius: "4px" }}
+                              onClick={() => {
+                                const copy = [...decisions.irTechTopics];
+                                copy[idx].selection = sel;
+                                updateDecision("irTechTopics", copy);
+                              }}
+                            >
+                              {tech.selection === sel && <span style={{ marginRight: "0.25rem" }}>✓</span>}
+                              {sel}
+                            </button>
+                          ))}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
-          <div style={{ display: "flex", gap: "0.5rem", marginTop: "1rem" }}>
-            <input type="text" id="add-tech-input" placeholder="e.g. Hydrogen fuel cells in rail, Induction charging..." style={{ flexGrow: 1 }} />
-            <button className="btn btn-outline" onClick={() => {
-              const el = document.getElementById("add-tech-input");
-              if (el && el.value.trim()) {
-                updateDecision("irTechTopics", [...decisions.irTechTopics, {
-                  name: el.value.trim(),
-                  priority: "High",
-                  selection: "Release 1"
-                }]);
-                el.value = "";
-              }
-            }}>+ Add Technology Topic</button>
+            <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem" }}>
+              <input type="text" id="add-tech-input" placeholder="e.g. Hydrogen fuel cells in rail, Induction charging..." style={{ flexGrow: 1, padding: "0.75rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", borderRadius: "6px" }} />
+              <button className="btn btn-outline" style={{ padding: "0.75rem 1.5rem", borderColor: "rgba(255,255,255,0.2)", color: "var(--text-primary)" }} onClick={() => {
+                const el = document.getElementById("add-tech-input");
+                if (el && el.value.trim()) {
+                  updateDecision("irTechTopics", [...decisions.irTechTopics, {
+                    name: el.value.trim(),
+                    priority: "High",
+                    selection: "Release 1"
+                  }]);
+                  el.value = "";
+                }
+              }}>+ Add Technology Topic</button>
+            </div>
           </div>
         </div>
       ),
@@ -1124,41 +1246,54 @@ export default function WorkshopClient({ latestSubmission, participants }) {
       chapter: "04 Innovation Radar",
       title: "What market developments should trigger attention?",
       content: (
-        <div className="animate-fade-in">
-          <p className="slide-p">"Infrastructure" is too broad. We need to define which specific market developments are decision-relevant.</p>
-          
-          <div className="card" style={{ margin: "1.5rem 0" }}>
-            <h4 style={{ fontSize: "0.95rem", color: "var(--accent)", marginBottom: "0.5rem" }}>Select or type actionable market signals</h4>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginBottom: "1rem" }}>
-              {["Infrastructure investment trends", "Pricing pressure", "Supply chain issues", "Government subsidies", "Decarbonization mandates"].map(sig => {
-                const isSelected = decisions.irMarketSignals.includes(sig);
-                return (
-                  <button 
-                    key={sig}
-                    className={`btn toggle-btn ${isSelected ? "active" : ""}`}
-                    onClick={() => {
-                      if (isSelected) {
-                        updateDecision("irMarketSignals", decisions.irMarketSignals.filter(x => x !== sig));
-                      } else {
-                        updateDecision("irMarketSignals", [...decisions.irMarketSignals, sig]);
-                      }
-                    }}
-                  >
-                    {sig}
-                  </button>
-                );
-              })}
+        <div className="slide-dashboard-layout">
+          <div className="dashboard-left">
+            <div className="context-box">
+              <div className="context-title">What you told us</div>
+              <p className="context-content">Market signals: "Infrastructure" (High).</p>
             </div>
-            
-            <div style={{ display: "flex", gap: "0.5rem" }}>
-              <input type="text" id="add-market-input" placeholder="e.g. Overhead line standardization directives..." style={{ flexGrow: 1 }} />
-              <button className="btn btn-outline" onClick={() => {
-                const el = document.getElementById("add-market-input");
-                if (el && el.value.trim()) {
-                  updateDecision("irMarketSignals", [...decisions.irMarketSignals, el.value.trim()]);
-                  el.value = "";
-                }
-              }}>+ Add</button>
+            <div className="context-box" style={{ background: "rgba(45, 212, 191, 0.05)", borderColor: "rgba(45, 212, 191, 0.2)" }}>
+              <div className="context-title" style={{ color: "var(--accent)" }}>What we need to lock today</div>
+              <p className="context-content">"Infrastructure" is too broad. We need to define which specific market developments are decision-relevant.</p>
+            </div>
+          </div>
+          <div className="dashboard-right">
+            <h3 style={{ fontSize: "0.85rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "1rem" }}>Decision</h3>
+            <div className="card" style={{ padding: "1.5rem" }}>
+              <h4 style={{ fontSize: "0.95rem", color: "var(--accent)", marginBottom: "0.75rem" }}>Select or type actionable market signals</h4>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginBottom: "1.5rem" }}>
+                {["Infrastructure investment trends", "Pricing pressure", "Supply chain issues", "Government subsidies", "Decarbonization mandates"].map(sig => {
+                  const isSelected = decisions.irMarketSignals.includes(sig);
+                  return (
+                    <button 
+                      key={sig}
+                      className={`btn toggle-btn ${isSelected ? "active" : ""}`}
+                      style={{ border: isSelected ? "1px solid var(--accent)" : "1px solid rgba(255,255,255,0.1)", background: isSelected ? "rgba(45, 212, 191, 0.1)" : "rgba(255,255,255,0.05)", color: isSelected ? "var(--text-primary)" : "var(--text-secondary)", padding: "0.5rem 1rem", fontSize: "0.85rem", borderRadius: "6px" }}
+                      onClick={() => {
+                        if (isSelected) {
+                          updateDecision("irMarketSignals", decisions.irMarketSignals.filter(x => x !== sig));
+                        } else {
+                          updateDecision("irMarketSignals", [...decisions.irMarketSignals, sig]);
+                        }
+                      }}
+                    >
+                      {isSelected && <span style={{ marginRight: "0.5rem" }}>✓</span>}
+                      {sig}
+                    </button>
+                  );
+                })}
+              </div>
+              
+              <div style={{ display: "flex", gap: "0.5rem" }}>
+                <input type="text" id="add-market-input" placeholder="e.g. Overhead line standardization directives..." style={{ flexGrow: 1, padding: "0.6rem 1rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", borderRadius: "6px" }} />
+                <button className="btn btn-outline" style={{ padding: "0.6rem 1.25rem", borderColor: "rgba(255,255,255,0.2)", color: "var(--text-primary)" }} onClick={() => {
+                  const el = document.getElementById("add-market-input");
+                  if (el && el.value.trim()) {
+                    updateDecision("irMarketSignals", [...decisions.irMarketSignals, el.value.trim()]);
+                    el.value = "";
+                  }
+                }}>+ Add</button>
+              </div>
             </div>
           </div>
         </div>
@@ -1177,57 +1312,68 @@ export default function WorkshopClient({ latestSubmission, participants }) {
       chapter: "04 Innovation Radar",
       title: "What should we monitor about resources?",
       content: (
-        <div className="animate-fade-in">
-          <p className="slide-p">Define what "monitoring copper (High) and aluminium (Medium)" means in practice.</p>
-          
-          <div className="grid-2" style={{ gap: "2rem", margin: "1.5rem 0" }}>
-            <div className="card">
-              <h3 style={{ fontSize: "1.1rem", color: "var(--accent)" }}>Copper Watch triggers</h3>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginTop: "1rem" }}>
-                {["Price", "Availability", "Supply conditions", "Major market developments"].map(opt => {
-                  const isChecked = decisions.irResourcesCopper.includes(opt);
-                  return (
-                    <label key={opt} style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer" }}>
-                      <input 
-                        type="checkbox" 
-                        checked={isChecked}
-                        onChange={() => {
-                          if (isChecked) {
-                            updateDecision("irResourcesCopper", decisions.irResourcesCopper.filter(x => x !== opt));
-                          } else {
-                            updateDecision("irResourcesCopper", [...decisions.irResourcesCopper, opt]);
-                          }
-                        }}
-                      />
-                      {opt}
-                    </label>
-                  );
-                })}
-              </div>
+        <div className="slide-dashboard-layout">
+          <div className="dashboard-left">
+            <div className="context-box">
+              <div className="context-title">What you told us</div>
+              <p className="context-content">Resources: Copper (High), Aluminium (Medium).</p>
             </div>
+            <div className="context-box" style={{ background: "rgba(45, 212, 191, 0.05)", borderColor: "rgba(45, 212, 191, 0.2)" }}>
+              <div className="context-title" style={{ color: "var(--accent)" }}>What we need to lock today</div>
+              <p className="context-content">Define what "monitoring copper and aluminium" means in practice.</p>
+            </div>
+          </div>
+          <div className="dashboard-right">
+            <h3 style={{ fontSize: "0.85rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "1rem" }}>Decision</h3>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+              <div className="card" style={{ padding: "1.5rem" }}>
+                <h3 style={{ fontSize: "1rem", color: "var(--accent)", marginBottom: "1rem" }}>Copper Watch triggers</h3>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                  {["Price", "Availability", "Supply conditions", "Major market developments"].map(opt => {
+                    const isChecked = decisions.irResourcesCopper.includes(opt);
+                    return (
+                      <label key={opt} style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer", color: "var(--text-primary)", fontSize: "0.9rem" }}>
+                        <input 
+                          type="checkbox" 
+                          checked={isChecked}
+                          onChange={() => {
+                            if (isChecked) {
+                              updateDecision("irResourcesCopper", decisions.irResourcesCopper.filter(x => x !== opt));
+                            } else {
+                              updateDecision("irResourcesCopper", [...decisions.irResourcesCopper, opt]);
+                            }
+                          }}
+                        />
+                        {opt}
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
 
-            <div className="card">
-              <h3 style={{ fontSize: "1.1rem", color: "var(--text-secondary)" }}>Aluminium Watch triggers</h3>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginTop: "1rem" }}>
-                {["Price", "Availability", "Supply conditions", "Major market developments"].map(opt => {
-                  const isChecked = decisions.irResourcesAluminium.includes(opt);
-                  return (
-                    <label key={opt} style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer" }}>
-                      <input 
-                        type="checkbox" 
-                        checked={isChecked}
-                        onChange={() => {
-                          if (isChecked) {
-                            updateDecision("irResourcesAluminium", decisions.irResourcesAluminium.filter(x => x !== opt));
-                          } else {
-                            updateDecision("irResourcesAluminium", [...decisions.irResourcesAluminium, opt]);
-                          }
-                        }}
-                      />
-                      {opt}
-                    </label>
-                  );
-                })}
+              <div className="card" style={{ padding: "1.5rem" }}>
+                <h3 style={{ fontSize: "1rem", color: "var(--text-secondary)", marginBottom: "1rem" }}>Aluminium Watch triggers</h3>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                  {["Price", "Availability", "Supply conditions", "Major market developments"].map(opt => {
+                    const isChecked = decisions.irResourcesAluminium.includes(opt);
+                    return (
+                      <label key={opt} style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer", color: "var(--text-primary)", fontSize: "0.9rem" }}>
+                        <input 
+                          type="checkbox" 
+                          checked={isChecked}
+                          onChange={() => {
+                            if (isChecked) {
+                              updateDecision("irResourcesAluminium", decisions.irResourcesAluminium.filter(x => x !== opt));
+                            } else {
+                              updateDecision("irResourcesAluminium", [...decisions.irResourcesAluminium, opt]);
+                            }
+                          }}
+                        />
+                        {opt}
+                      </label>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
@@ -1247,35 +1393,52 @@ export default function WorkshopClient({ latestSubmission, participants }) {
       chapter: "04 Innovation Radar",
       title: "How should we establish the initial source universe?",
       content: (
-        <div className="animate-fade-in">
-          <p className="slide-p">No target sources were provided in the prep. Determine the source universe discovery strategy.</p>
-          
-          <div className="submission-grid" style={{ margin: "1.5rem 0" }}>
-            {[
-              { id: "Option A", label: "Option A", desc: "K+M provides specific must-have sources to track." },
-              { id: "Option B", label: "Option B", desc: "nelio proposes a target list based on confirmed tech themes, and K+M validates it." },
-              { id: "Option C", label: "Option C", desc: "A combination: nelio provides a seed set, and K+M adds mandatory sources." }
-            ].map(opt => (
-              <div 
-                key={opt.id}
-                className={`card ${decisions.irSourcesApproach === opt.id ? "active-card" : ""}`}
-                style={{ cursor: "pointer", border: decisions.irSourcesApproach === opt.id ? "1px solid var(--accent)" : "1px solid var(--border-color)" }}
-                onClick={() => updateDecision("irSourcesApproach", opt.id)}
-              >
-                <h4 style={{ margin: "0 0 0.5rem 0" }}>{opt.label}</h4>
-                <p style={{ margin: 0, fontSize: "0.85rem", color: "var(--text-secondary)" }}>{opt.desc}</p>
-              </div>
-            ))}
+        <div className="slide-dashboard-layout">
+          <div className="dashboard-left">
+            <div className="context-box">
+              <div className="context-title">What you told us</div>
+              <p className="context-content">No target sources were provided in the prep.</p>
+            </div>
+            <div className="context-box" style={{ background: "rgba(45, 212, 191, 0.05)", borderColor: "rgba(45, 212, 191, 0.2)" }}>
+              <div className="context-title" style={{ color: "var(--accent)" }}>What we need to lock today</div>
+              <p className="context-content">Determine the source universe discovery strategy.</p>
+            </div>
           </div>
+          <div className="dashboard-right">
+            <h3 style={{ fontSize: "0.85rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "1rem" }}>Decision</h3>
+            <div style={{ display: "grid", gap: "1rem", marginBottom: "1.5rem" }}>
+              {[
+                { id: "Option A", label: "Option A", desc: "K+M provides specific must-have sources to track." },
+                { id: "Option B", label: "Option B", desc: "nelio proposes a target list based on confirmed tech themes, and K+M validates it." },
+                { id: "Option C", label: "Option C", desc: "A combination: nelio provides a seed set, and K+M adds mandatory sources." }
+              ].map(opt => (
+                <div 
+                  key={opt.id}
+                  className={`card ${decisions.irSourcesApproach === opt.id ? "active-card" : ""}`}
+                  style={{ cursor: "pointer", border: decisions.irSourcesApproach === opt.id ? "1px solid var(--accent)" : "1px solid rgba(255,255,255,0.1)", background: decisions.irSourcesApproach === opt.id ? "rgba(45, 212, 191, 0.1)" : "rgba(255,255,255,0.02)", padding: "1.25rem", marginBottom: 0 }}
+                  onClick={() => updateDecision("irSourcesApproach", opt.id)}
+                >
+                  <h4 style={{ margin: "0 0 0.5rem 0", color: decisions.irSourcesApproach === opt.id ? "var(--text-primary)" : "var(--text-secondary)", fontSize: "1rem" }}>
+                    {decisions.irSourcesApproach === opt.id && <span style={{ marginRight: "0.5rem", color: "var(--accent)" }}>✓</span>}
+                    {opt.label}
+                  </h4>
+                  <p style={{ margin: 0, fontSize: "0.85rem", color: decisions.irSourcesApproach === opt.id ? "rgba(255,255,255,0.8)" : "var(--text-muted)" }}>{opt.desc}</p>
+                </div>
+              ))}
+            </div>
 
-          <div className="form-group">
-            <label style={{ fontWeight: "600" }}>Are there any initial sources you consider mandatory or particularly trusted?</label>
-            <input 
-              type="text" 
-              value={decisions.irMandatorySources}
-              onChange={(e) => updateDecision("irMandatorySources", e.target.value)}
-              placeholder="e.g. UITP publications, Railway Gazette..."
-            />
+            <div className="card" style={{ padding: "1.5rem" }}>
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label style={{ fontWeight: "500", fontSize: "0.85rem", color: "var(--text-primary)" }}>Are there any initial sources you consider mandatory or particularly trusted?</label>
+                <input 
+                  type="text" 
+                  value={decisions.irMandatorySources}
+                  onChange={(e) => updateDecision("irMandatorySources", e.target.value)}
+                  placeholder="e.g. UITP publications, Railway Gazette..."
+                  style={{ marginTop: "0.5rem", padding: "0.75rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", borderRadius: "6px" }}
+                />
+              </div>
+            </div>
           </div>
         </div>
       ),
@@ -1293,18 +1456,32 @@ export default function WorkshopClient({ latestSubmission, participants }) {
       chapter: "04 Innovation Radar",
       title: "What language should trigger radar attention?",
       content: (
-        <div className="animate-fade-in">
-          <p className="slide-p">Establish core terms for the initial watchlist. We will expand and refine these after the workshop.</p>
-          <div className="form-group" style={{ margin: "2rem 0" }}>
-            <label style={{ fontWeight: "600" }}>Specify core terms, synonyms, and relevant technology names:</label>
-            <textarea 
-              value={decisions.irSeedWatchlist}
-              onChange={(e) => updateDecision("irSeedWatchlist", e.target.value)}
-              style={{ height: "120px" }}
-            />
+        <div className="slide-dashboard-layout">
+          <div className="dashboard-left">
+            <div className="context-box">
+              <div className="context-title">What you told us</div>
+              <p className="context-content">Topics and terms discussed previously.</p>
+            </div>
+            <div className="context-box" style={{ background: "rgba(45, 212, 191, 0.05)", borderColor: "rgba(45, 212, 191, 0.2)" }}>
+              <div className="context-title" style={{ color: "var(--accent)" }}>What we need to lock today</div>
+              <p className="context-content">Establish core terms for the initial watchlist. We will expand and refine these after the workshop.</p>
+            </div>
           </div>
-          <div className="highlight-box">
-            We will use these confirmed topics and seed terms to compile a structured keyword catalog for K+M approval.
+          <div className="dashboard-right">
+            <h3 style={{ fontSize: "0.85rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "1rem" }}>Decision</h3>
+            <div className="card" style={{ padding: "1.5rem" }}>
+              <div className="form-group" style={{ marginBottom: "1.5rem" }}>
+                <label style={{ fontWeight: "500", fontSize: "0.9rem", color: "var(--text-primary)", marginBottom: "0.5rem", display: "block" }}>Specify core terms, synonyms, and relevant technology names:</label>
+                <textarea 
+                  value={decisions.irSeedWatchlist}
+                  onChange={(e) => updateDecision("irSeedWatchlist", e.target.value)}
+                  style={{ height: "140px", padding: "1rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", borderRadius: "6px" }}
+                />
+              </div>
+              <div className="highlight-box" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", padding: "1rem", borderRadius: "6px", fontSize: "0.85rem", color: "var(--text-muted)", margin: 0 }}>
+                We will use these confirmed topics and seed terms to compile a structured keyword catalog for K+M approval.
+              </div>
+            </div>
           </div>
         </div>
       ),
@@ -1322,67 +1499,82 @@ export default function WorkshopClient({ latestSubmission, participants }) {
       chapter: "04 Innovation Radar",
       title: "What makes an Innovation Radar item useful?",
       content: (
-        <div className="animate-fade-in">
-          <p className="slide-p">Refine outputs,cadence, and alert recipients for R&D/Innovation users.</p>
-          
-          <div className="submission-grid" style={{ margin: "1.5rem 0" }}>
-            <div className="card" style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-              <span className="data-label">Experience Delivery</span>
-              <div style={{ display: "flex", gap: "0.5rem" }}>
-                {["Dashboard", "Weekly Digest", "Both"].map(opt => (
-                  <button 
-                    key={opt}
-                    className={`btn toggle-btn ${decisions.irOutputExperience === opt ? "active" : ""}`}
-                    onClick={() => updateDecision("irOutputExperience", opt)}
-                    style={{ fontSize: "0.8rem", padding: "0.3rem 0.6rem" }}
-                  >
-                    {opt}
-                  </button>
-                ))}
+        <div className="slide-dashboard-layout">
+          <div className="dashboard-left">
+            <div className="context-box">
+              <div className="context-title">What you told us</div>
+              <p className="context-content">Needs for reporting and tracking.</p>
+            </div>
+            <div className="context-box" style={{ background: "rgba(45, 212, 191, 0.05)", borderColor: "rgba(45, 212, 191, 0.2)" }}>
+              <div className="context-title" style={{ color: "var(--accent)" }}>What we need to lock today</div>
+              <p className="context-content">Refine outputs, cadence, and alert recipients for R&D/Innovation users.</p>
+            </div>
+          </div>
+          <div className="dashboard-right">
+            <h3 style={{ fontSize: "0.85rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "1rem" }}>Decision</h3>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+              <div className="card" style={{ padding: "1.5rem", marginBottom: 0, display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                <span className="data-label" style={{ fontSize: "0.75rem", color: "var(--text-muted)", textTransform: "uppercase" }}>Experience Delivery</span>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+                  {["Dashboard", "Weekly Digest", "Both"].map(opt => (
+                    <button 
+                      key={opt}
+                      className={`btn toggle-btn ${decisions.irOutputExperience === opt ? "active" : ""}`}
+                      onClick={() => updateDecision("irOutputExperience", opt)}
+                      style={{ fontSize: "0.8rem", padding: "0.5rem", flexGrow: 1, border: decisions.irOutputExperience === opt ? "1px solid var(--accent)" : "1px solid rgba(255,255,255,0.1)", background: decisions.irOutputExperience === opt ? "rgba(45, 212, 191, 0.1)" : "transparent", color: decisions.irOutputExperience === opt ? "var(--text-primary)" : "var(--text-muted)" }}
+                    >
+                      {opt}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="card" style={{ padding: "1.5rem", marginBottom: 0, display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                <span className="data-label" style={{ fontSize: "0.75rem", color: "var(--text-muted)", textTransform: "uppercase" }}>Push Cadence</span>
+                <select 
+                  value={decisions.irAlertFrequency}
+                  onChange={(e) => updateDecision("irAlertFrequency", e.target.value)}
+                  style={{ background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.1)", padding: "0.6rem", borderRadius: "6px", color: "var(--text-primary)", fontSize: "0.85rem" }}
+                >
+                  <option value="Real-time">Real-time</option>
+                  <option value="Daily">Daily</option>
+                  <option value="Weekly">Weekly</option>
+                </select>
               </div>
             </div>
 
-            <div className="card" style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-              <span className="data-label">Alert Recipient</span>
-              <input 
-                type="text" 
-                value={decisions.irAlertRecipient}
-                onChange={(e) => updateDecision("irAlertRecipient", e.target.value)}
-                placeholder="e.g. Dennis Darra + Franc Dugal"
-                style={{ marginTop: "0.25rem" }}
-              />
+            <div className="card" style={{ padding: "1.5rem", marginBottom: "1rem" }}>
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label style={{ fontWeight: "500", fontSize: "0.85rem", color: "var(--text-primary)", display: "block", marginBottom: "0.5rem" }}>Alert Recipient(s)</label>
+                <input 
+                  type="text" 
+                  value={decisions.irAlertRecipient}
+                  onChange={(e) => updateDecision("irAlertRecipient", e.target.value)}
+                  placeholder="e.g. Dennis Darra + Franc Dugal"
+                  style={{ padding: "0.6rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", borderRadius: "6px" }}
+                />
+              </div>
             </div>
 
-            <div className="card" style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-              <span className="data-label">Push Cadence</span>
-              <select 
-                value={decisions.irAlertFrequency}
-                onChange={(e) => updateDecision("irAlertFrequency", e.target.value)}
-                style={{ background: "#0a0a0a", border: "1px solid var(--border-color)", padding: "0.5rem", borderRadius: "6px", color: "var(--text-primary)" }}
-              >
-                <option value="Real-time">Real-time</option>
-                <option value="Daily">Daily</option>
-                <option value="Weekly">Weekly</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="grid-2" style={{ gap: "2rem" }}>
-            <div className="form-group">
-              <label style={{ fontWeight: "600" }}>Release 1 must-haves for Innovation Radar:</label>
-              <textarea 
-                value={decisions.irMustHaves}
-                onChange={(e) => updateDecision("irMustHaves", e.target.value)}
-                style={{ height: "60px" }}
-              />
-            </div>
-            <div className="form-group">
-              <label style={{ fontWeight: "600" }}>Useful later (Nice-to-haves):</label>
-              <textarea 
-                value={decisions.irNiceToHaves}
-                onChange={(e) => updateDecision("irNiceToHaves", e.target.value)}
-                style={{ height: "60px" }}
-              />
+            <div className="card" style={{ padding: "1.5rem" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label style={{ fontWeight: "500", fontSize: "0.85rem", color: "var(--accent)", display: "block", marginBottom: "0.5rem" }}>Release 1 must-haves:</label>
+                  <textarea 
+                    value={decisions.irMustHaves}
+                    onChange={(e) => updateDecision("irMustHaves", e.target.value)}
+                    style={{ height: "60px", padding: "0.75rem", border: "1px solid rgba(45,212,191,0.2)", background: "rgba(45,212,191,0.05)", color: "var(--text-primary)", borderRadius: "6px" }}
+                  />
+                </div>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label style={{ fontWeight: "500", fontSize: "0.85rem", color: "var(--text-muted)", display: "block", marginBottom: "0.5rem" }}>Useful later (Nice-to-haves):</label>
+                  <textarea 
+                    value={decisions.irNiceToHaves}
+                    onChange={(e) => updateDecision("irNiceToHaves", e.target.value)}
+                    style={{ height: "60px", padding: "0.75rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", borderRadius: "6px" }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1400,36 +1592,51 @@ export default function WorkshopClient({ latestSubmission, participants }) {
       chapter: "04 Innovation Radar",
       title: "Innovation Radar Baseline Playback",
       content: (
-        <div className="animate-fade-in">
-          <p className="slide-p">Please review and confirm the Innovation Radar implementation baseline.</p>
-          <div className="submission-grid" style={{ margin: "2rem 0" }}>
-            <div className="card">
-              <span className="data-label">Competitors (Tier 1)</span>
-              <p className="data-value" style={{ margin: "0.25rem 0 0 0", fontSize: "0.95rem" }}>
-                {decisions.irCompetitors.filter(c => c.tier === "Tier 1").map(c => c.name).join(", ") || "—"}
-              </p>
+        <div className="slide-dashboard-layout">
+          <div className="dashboard-left">
+            <div className="context-box">
+              <div className="context-title">What you told us</div>
+              <p className="context-content">The Innovation Radar baseline has been built during the workshop.</p>
             </div>
-            <div className="card">
-              <span className="data-label">Release 1 Tech Topics</span>
-              <p className="data-value" style={{ margin: "0.25rem 0 0 0", fontSize: "0.95rem" }}>
-                {decisions.irTechTopics.filter(t => t.selection === "Release 1").map(t => t.name).join(", ") || "—"}
-              </p>
-            </div>
-            <div className="card">
-              <span className="data-label">Resources Monitored</span>
-              <p className="data-value" style={{ margin: "0.25rem 0 0 0", fontSize: "0.95rem" }}>
-                Copper ({decisions.irResourcesCopper.join("/")}) · Aluminium ({decisions.irResourcesAluminium.join("/")})
-              </p>
+            <div className="context-box" style={{ background: "rgba(45, 212, 191, 0.05)", borderColor: "rgba(45, 212, 191, 0.2)" }}>
+              <div className="context-title" style={{ color: "var(--accent)" }}>What we need to lock today</div>
+              <p className="context-content">Please review and confirm the Innovation Radar implementation baseline.</p>
             </div>
           </div>
+          <div className="dashboard-right">
+            <div className="card" style={{ padding: "1.5rem" }}>
+              <h3 style={{ fontSize: "1rem", color: "var(--accent)", marginBottom: "1rem" }}>Baseline Overview</h3>
+              <div style={{ display: "grid", gap: "1rem" }}>
+                <div style={{ background: "rgba(255,255,255,0.02)", padding: "1rem", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.05)" }}>
+                  <span className="data-label" style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase", display: "block", marginBottom: "0.25rem" }}>Competitors (Tier 1)</span>
+                  <p className="data-value" style={{ margin: 0, fontSize: "0.95rem", color: "var(--text-primary)" }}>
+                    {decisions.irCompetitors.filter(c => c.tier === "Tier 1").map(c => c.name).join(", ") || "—"}
+                  </p>
+                </div>
+                <div style={{ background: "rgba(255,255,255,0.02)", padding: "1rem", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.05)" }}>
+                  <span className="data-label" style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase", display: "block", marginBottom: "0.25rem" }}>Release 1 Tech Topics</span>
+                  <p className="data-value" style={{ margin: 0, fontSize: "0.95rem", color: "var(--text-primary)" }}>
+                    {decisions.irTechTopics.filter(t => t.selection === "Release 1").map(t => t.name).join(", ") || "—"}
+                  </p>
+                </div>
+                <div style={{ background: "rgba(255,255,255,0.02)", padding: "1rem", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.05)" }}>
+                  <span className="data-label" style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase", display: "block", marginBottom: "0.25rem" }}>Resources Monitored</span>
+                  <p className="data-value" style={{ margin: 0, fontSize: "0.95rem", color: "var(--text-primary)" }}>
+                    Copper ({decisions.irResourcesCopper.join("/")}) · Aluminium ({decisions.irResourcesAluminium.join("/")})
+                  </p>
+                </div>
+              </div>
+            </div>
 
-          <div style={{ marginTop: "2rem", borderTop: "1px solid var(--border-color)", paddingTop: "1.5rem" }}>
-            <button 
-              className={`btn ${decisions.irTechStatus === "Confirmed" ? "btn-primary" : "btn-outline"}`}
-              onClick={() => updateDecision("irTechStatus", "Confirmed")}
-            >
-              {decisions.irTechStatus === "Confirmed" ? "✓ Innovation Radar baseline confirmed" : "Confirm Innovation Radar Baseline"}
-            </button>
+            <div style={{ marginTop: "1rem" }}>
+              <button 
+                className="btn toggle-btn"
+                onClick={() => updateDecision("irTechStatus", "Confirmed")}
+                style={{ width: "100%", padding: "1rem", fontSize: "1rem", border: decisions.irTechStatus === "Confirmed" ? "1px solid var(--accent)" : "1px solid rgba(255,255,255,0.2)", background: decisions.irTechStatus === "Confirmed" ? "rgba(45, 212, 191, 0.1)" : "rgba(255,255,255,0.05)", color: decisions.irTechStatus === "Confirmed" ? "var(--text-primary)" : "var(--text-muted)" }}
+              >
+                {decisions.irTechStatus === "Confirmed" ? "✓ Innovation Radar baseline confirmed" : "Confirm Innovation Radar Baseline"}
+              </button>
+            </div>
           </div>
         </div>
       ),
@@ -1448,37 +1655,52 @@ export default function WorkshopClient({ latestSubmission, participants }) {
       chapter: "05 Ownership",
       title: "Who owns what from here?",
       content: (
-        <div className="animate-fade-in">
-          <p className="slide-p">Verify responsibilities and assign the sign-off ownership of the Phase 0 baseline.</p>
-          
-          <div className="submission-grid" style={{ margin: "1.5rem 0" }}>
-            <div className="card">
-              <span className="data-label">Tender Scout Owner</span>
-              <input type="text" value={decisions.ownerTenderScout} onChange={(e) => updateDecision("ownerTenderScout", e.target.value)} style={{ marginTop: "0.25rem" }} />
+        <div className="slide-dashboard-layout">
+          <div className="dashboard-left">
+            <div className="context-box">
+              <div className="context-title">What you told us</div>
+              <p className="context-content">Different stakeholders are involved across the organization.</p>
             </div>
-            <div className="card">
-              <span className="data-label">Innovation Radar Owner</span>
-              <input type="text" value={decisions.ownerInnovationRadar} onChange={(e) => updateDecision("ownerInnovationRadar", e.target.value)} style={{ marginTop: "0.25rem" }} />
-            </div>
-            <div className="card">
-              <span className="data-label">IT / Security Rep</span>
-              <input type="text" value={decisions.ownerITSecurity} onChange={(e) => updateDecision("ownerITSecurity", e.target.value)} style={{ marginTop: "0.25rem" }} />
-            </div>
-            <div className="card">
-              <span className="data-label">Project Coordinator</span>
-              <input type="text" value={decisions.coordinatorProject} onChange={(e) => updateDecision("coordinatorProject", e.target.value)} style={{ marginTop: "0.25rem" }} />
+            <div className="context-box" style={{ background: "rgba(45, 212, 191, 0.05)", borderColor: "rgba(45, 212, 191, 0.2)" }}>
+              <div className="context-title" style={{ color: "var(--accent)" }}>What we need to lock today</div>
+              <p className="context-content">Verify responsibilities and assign the sign-off ownership of the Phase 0 baseline.</p>
             </div>
           </div>
+          <div className="dashboard-right">
+            <h3 style={{ fontSize: "0.85rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "1rem" }}>Decision</h3>
+            <div className="card" style={{ padding: "1.5rem", marginBottom: "1rem" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label style={{ fontWeight: "500", fontSize: "0.85rem", color: "var(--text-muted)", display: "block", marginBottom: "0.5rem", textTransform: "uppercase" }}>Tender Scout Owner</label>
+                  <input type="text" value={decisions.ownerTenderScout} onChange={(e) => updateDecision("ownerTenderScout", e.target.value)} style={{ padding: "0.6rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", borderRadius: "6px", width: "100%" }} />
+                </div>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label style={{ fontWeight: "500", fontSize: "0.85rem", color: "var(--text-muted)", display: "block", marginBottom: "0.5rem", textTransform: "uppercase" }}>Innovation Radar Owner</label>
+                  <input type="text" value={decisions.ownerInnovationRadar} onChange={(e) => updateDecision("ownerInnovationRadar", e.target.value)} style={{ padding: "0.6rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", borderRadius: "6px", width: "100%" }} />
+                </div>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label style={{ fontWeight: "500", fontSize: "0.85rem", color: "var(--text-muted)", display: "block", marginBottom: "0.5rem", textTransform: "uppercase" }}>IT / Security Rep</label>
+                  <input type="text" value={decisions.ownerITSecurity} onChange={(e) => updateDecision("ownerITSecurity", e.target.value)} style={{ padding: "0.6rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", borderRadius: "6px", width: "100%" }} />
+                </div>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label style={{ fontWeight: "500", fontSize: "0.85rem", color: "var(--text-muted)", display: "block", marginBottom: "0.5rem", textTransform: "uppercase" }}>Project Coordinator</label>
+                  <input type="text" value={decisions.coordinatorProject} onChange={(e) => updateDecision("coordinatorProject", e.target.value)} style={{ padding: "0.6rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", borderRadius: "6px", width: "100%" }} />
+                </div>
+              </div>
+            </div>
 
-          <div style={{ marginTop: "1.5rem", borderTop: "1px solid var(--border-color)", paddingTop: "1.5rem" }}>
-            <h4 style={{ marginBottom: "0.5rem" }}>Who gives final business confirmation of the Phase 0 baseline?</h4>
-            <input 
-              type="text" 
-              value={decisions.finalSignoffOwner} 
-              onChange={(e) => updateDecision("finalSignoffOwner", e.target.value)}
-              placeholder="e.g. Fawzi Fattel & Dennis Darra"
-              style={{ maxWidth: "360px" }}
-            />
+            <div className="card" style={{ padding: "1.5rem" }}>
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label style={{ fontWeight: "500", fontSize: "1rem", color: "var(--accent)", display: "block", marginBottom: "0.75rem" }}>Who gives final business confirmation of the Phase 0 baseline?</label>
+                <input 
+                  type="text" 
+                  value={decisions.finalSignoffOwner} 
+                  onChange={(e) => updateDecision("finalSignoffOwner", e.target.value)}
+                  placeholder="e.g. Fawzi Fattel & Dennis Darra"
+                  style={{ padding: "0.75rem", border: "1px solid rgba(45,212,191,0.3)", background: "rgba(45,212,191,0.05)", color: "var(--text-primary)", borderRadius: "6px", width: "100%", fontSize: "1rem" }}
+                />
+              </div>
+            </div>
           </div>
         </div>
       ),
@@ -1496,16 +1718,30 @@ export default function WorkshopClient({ latestSubmission, participants }) {
       chapter: "05 Ownership",
       title: "Are there any remaining constraints?",
       content: (
-        <div className="animate-fade-in">
-          <p className="slide-p">A brief check for items that might impact implementation feasibility.</p>
-          <div className="form-group" style={{ margin: "2rem 0" }}>
-            <label style={{ fontWeight: "600" }}>Are there any additional compliance, architecture, or timing constraints to track?</label>
-            <textarea 
-              value={decisions.additionalConstraints}
-              onChange={(e) => updateDecision("additionalConstraints", e.target.value)}
-              style={{ height: "100px" }}
-              placeholder="e.g. Strict data localization guidelines..."
-            />
+        <div className="slide-dashboard-layout">
+          <div className="dashboard-left">
+            <div className="context-box">
+              <div className="context-title">What you told us</div>
+              <p className="context-content">Feasibility is always key.</p>
+            </div>
+            <div className="context-box" style={{ background: "rgba(45, 212, 191, 0.05)", borderColor: "rgba(45, 212, 191, 0.2)" }}>
+              <div className="context-title" style={{ color: "var(--accent)" }}>What we need to lock today</div>
+              <p className="context-content">A brief check for items that might impact implementation feasibility.</p>
+            </div>
+          </div>
+          <div className="dashboard-right">
+            <h3 style={{ fontSize: "0.85rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "1rem" }}>Decision</h3>
+            <div className="card" style={{ padding: "1.5rem" }}>
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label style={{ fontWeight: "500", fontSize: "0.95rem", color: "var(--text-primary)", display: "block", marginBottom: "0.75rem" }}>Are there any additional compliance, architecture, or timing constraints to track?</label>
+                <textarea 
+                  value={decisions.additionalConstraints}
+                  onChange={(e) => updateDecision("additionalConstraints", e.target.value)}
+                  style={{ height: "140px", padding: "1rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", borderRadius: "6px" }}
+                  placeholder="e.g. Strict data localization guidelines..."
+                />
+              </div>
+            </div>
           </div>
         </div>
       ),
@@ -1524,33 +1760,36 @@ export default function WorkshopClient({ latestSubmission, participants }) {
       chapter: "06 Decisions & next steps",
       title: "Phase 0 Baseline — Confirmed Today",
       content: (
-        <div className="animate-fade-in" style={{ maxHeight: "460px", overflowY: "auto", paddingRight: "0.5rem" }}>
-          <p className="slide-p" style={{ marginBottom: "1.5rem" }}>This is the consolidated implementation baseline built live from your workshop decisions.</p>
-          
-          <div className="grid-2" style={{ gap: "2rem" }}>
-            <div>
-              <h3 style={{ color: "var(--accent)", fontSize: "1.15rem", borderBottom: "1px solid var(--border-color)", paddingBottom: "0.5rem" }}>Tender Scout</h3>
-              <ul className="slide-list-none" style={{ fontSize: "0.9rem", display: "flex", flexDirection: "column", gap: "0.75rem", marginTop: "1rem" }}>
-                <li><strong>Priority Geography:</strong> {decisions.tsGeoRelease1.join(", ") || "—"}</li>
-                <li><strong>Release 1 Sources:</strong> {decisions.tsPortals.filter(p => p.selection === "Release 1").map(p => p.id).join(", ") || "—"}</li>
-                <li><strong>Includes:</strong> {decisions.tsIncludes.join(" / ") || "—"}</li>
-                <li><strong>Excludes:</strong> {decisions.tsExcludes.join(" / ") || "—"}</li>
-                <li><strong>Keywords Grouping:</strong> {decisions.tsKeywordsStrong.slice(0, 4).join(", ")} ...</li>
-                <li><strong>Contractor Watchlist:</strong> {decisions.tsTrackContractors} {decisions.tsContractorWatchlist ? `(${decisions.tsContractorWatchlist})` : ""}</li>
-                <li><strong>Experience cadence:</strong> {decisions.tsOutputExperience} / {decisions.tsAlertFrequency} alerts</li>
-              </ul>
-            </div>
+        <div className="slide-dashboard-layout" style={{ gridTemplateColumns: "1fr" }}>
+          <div className="dashboard-right" style={{ padding: "0" }}>
+            <div className="card" style={{ padding: "2rem" }}>
+              <p className="slide-p" style={{ marginBottom: "2rem", color: "var(--text-secondary)", fontSize: "1rem" }}>This is the consolidated implementation baseline built live from your workshop decisions.</p>
+              
+              <div className="grid-2" style={{ gap: "2rem" }}>
+                <div style={{ background: "rgba(255,255,255,0.02)", padding: "1.5rem", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.05)" }}>
+                  <h3 style={{ color: "var(--accent)", fontSize: "1.25rem", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "0.75rem", marginBottom: "1rem" }}>Tender Scout</h3>
+                  <ul className="slide-list-none" style={{ fontSize: "0.95rem", display: "flex", flexDirection: "column", gap: "1rem", color: "var(--text-primary)" }}>
+                    <li style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}><strong style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase" }}>Priority Geography</strong> {decisions.tsGeoRelease1.join(", ") || "—"}</li>
+                    <li style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}><strong style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase" }}>Release 1 Sources</strong> {decisions.tsPortals.filter(p => p.selection === "Release 1").map(p => p.id).join(", ") || "—"}</li>
+                    <li style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}><strong style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase" }}>Includes / Excludes</strong> In: {decisions.tsIncludes.join(" / ") || "—"} <br/> Ex: {decisions.tsExcludes.join(" / ") || "—"}</li>
+                    <li style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}><strong style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase" }}>Keywords Grouping</strong> {decisions.tsKeywordsStrong.slice(0, 4).join(", ")} ...</li>
+                    <li style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}><strong style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase" }}>Contractor Watchlist</strong> {decisions.tsTrackContractors} {decisions.tsContractorWatchlist ? `(${decisions.tsContractorWatchlist})` : ""}</li>
+                    <li style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}><strong style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase" }}>Experience cadence</strong> {decisions.tsOutputExperience} / {decisions.tsAlertFrequency}</li>
+                  </ul>
+                </div>
 
-            <div>
-              <h3 style={{ color: "var(--text-secondary)", fontSize: "1.15rem", borderBottom: "1px solid var(--border-color)", paddingBottom: "0.5rem" }}>Innovation Radar</h3>
-              <ul className="slide-list-none" style={{ fontSize: "0.9rem", display: "flex", flexDirection: "column", gap: "0.75rem", marginTop: "1rem" }}>
-                <li><strong>Competitors:</strong> {decisions.irCompetitors.filter(c => c.tier === "Tier 1").map(c => c.name).join(", ")}</li>
-                <li><strong>Technology Topics:</strong> {decisions.irTechTopics.filter(t => t.selection === "Release 1").map(t => t.name).join(", ") || "—"}</li>
-                <li><strong>Market Signals:</strong> {decisions.irMarketSignals.join(", ") || "—"}</li>
-                <li><strong>Resources:</strong> Copper ({decisions.irResourcesCopper.join("/")}) · Aluminium ({decisions.irResourcesAluminium.join("/")})</li>
-                <li><strong>Sources Strategy:</strong> {decisions.irSourcesApproach}</li>
-                <li><strong>R&D alert recipient:</strong> {decisions.irAlertRecipient} ({decisions.irAlertFrequency})</li>
-              </ul>
+                <div style={{ background: "rgba(255,255,255,0.02)", padding: "1.5rem", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.05)" }}>
+                  <h3 style={{ color: "var(--accent)", fontSize: "1.25rem", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "0.75rem", marginBottom: "1rem" }}>Innovation Radar</h3>
+                  <ul className="slide-list-none" style={{ fontSize: "0.95rem", display: "flex", flexDirection: "column", gap: "1rem", color: "var(--text-primary)" }}>
+                    <li style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}><strong style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase" }}>Competitors</strong> {decisions.irCompetitors.filter(c => c.tier === "Tier 1").map(c => c.name).join(", ")}</li>
+                    <li style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}><strong style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase" }}>Technology Topics</strong> {decisions.irTechTopics.filter(t => t.selection === "Release 1").map(t => t.name).join(", ") || "—"}</li>
+                    <li style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}><strong style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase" }}>Market Signals</strong> {decisions.irMarketSignals.join(", ") || "—"}</li>
+                    <li style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}><strong style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase" }}>Resources</strong> Copper ({decisions.irResourcesCopper.join("/")}) · Aluminium ({decisions.irResourcesAluminium.join("/")})</li>
+                    <li style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}><strong style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase" }}>Sources Strategy</strong> {decisions.irSourcesApproach}</li>
+                    <li style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}><strong style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase" }}>R&D Alert</strong> {decisions.irAlertRecipient} ({decisions.irAlertFrequency})</li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1569,49 +1808,58 @@ export default function WorkshopClient({ latestSubmission, participants }) {
       chapter: "06 Decisions & next steps",
       title: "Remaining Actions",
       content: (
-        <div className="animate-fade-in">
-          <p className="slide-p">Actions and deliverables to complete after the baseline lock.</p>
-          
-          <div className="data-table-wrapper" style={{ margin: "1.5rem 0" }}>
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Action Item</th>
-                  <th>Owner</th>
-                  <th>Deadline</th>
-                </tr>
-              </thead>
-              <tbody>
-                {decisions.openItems.map((item, idx) => (
-                  <tr key={idx}>
-                    <td>{item.item}</td>
-                    <td>{item.owner}</td>
-                    <td>{item.deadline}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <div className="slide-dashboard-layout" style={{ gridTemplateColumns: "1fr" }}>
+          <div className="dashboard-right" style={{ padding: 0 }}>
+            <div className="card" style={{ padding: "2rem" }}>
+              <p className="slide-p" style={{ marginBottom: "1.5rem", color: "var(--text-secondary)" }}>Actions and deliverables to complete after the baseline lock.</p>
+              
+              <div className="data-table-wrapper" style={{ margin: "0 0 1.5rem 0", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", overflow: "hidden" }}>
+                <table className="data-table" style={{ width: "100%", borderCollapse: "collapse" }}>
+                  <thead>
+                    <tr style={{ background: "rgba(255,255,255,0.05)", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+                      <th style={{ padding: "0.75rem 1rem", textAlign: "left", color: "var(--text-muted)", fontSize: "0.85rem", fontWeight: "600" }}>Action Item</th>
+                      <th style={{ padding: "0.75rem 1rem", textAlign: "left", color: "var(--text-muted)", fontSize: "0.85rem", fontWeight: "600" }}>Owner</th>
+                      <th style={{ padding: "0.75rem 1rem", textAlign: "left", color: "var(--text-muted)", fontSize: "0.85rem", fontWeight: "600" }}>Deadline</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {decisions.openItems.map((item, idx) => (
+                      <tr key={idx} style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                        <td style={{ padding: "0.75rem 1rem", color: "var(--text-primary)", fontSize: "0.95rem" }}>{item.item}</td>
+                        <td style={{ padding: "0.75rem 1rem", color: "var(--text-secondary)", fontSize: "0.95rem" }}>{item.owner}</td>
+                        <td style={{ padding: "0.75rem 1rem", color: "var(--text-secondary)", fontSize: "0.95rem" }}>{item.deadline}</td>
+                      </tr>
+                    ))}
+                    {decisions.openItems.length === 0 && (
+                      <tr>
+                        <td colSpan="3" style={{ padding: "1.5rem", textAlign: "center", color: "var(--text-muted)", fontStyle: "italic" }}>No action items recorded yet.</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
 
-          <div style={{ display: "flex", gap: "0.5rem" }}>
-            <input type="text" id="action-item-input" placeholder="e.g. Confirm sam.gov target API availability" style={{ flexGrow: 1 }} />
-            <input type="text" id="action-owner-input" placeholder="Owner (e.g. Leon)" style={{ width: "160px" }} />
-            <input type="text" id="action-date-input" placeholder="Date (YYYY-MM-DD)" style={{ width: "140px" }} />
-            <button className="btn btn-outline" onClick={() => {
-              const itemEl = document.getElementById("action-item-input");
-              const ownerEl = document.getElementById("action-owner-input");
-              const dateEl = document.getElementById("action-date-input");
-              if (itemEl?.value.trim() && ownerEl?.value.trim() && dateEl?.value.trim()) {
-                updateDecision("openItems", [...decisions.openItems, {
-                  item: itemEl.value.trim(),
-                  owner: ownerEl.value.trim(),
-                  deadline: dateEl.value.trim()
-                }]);
-                itemEl.value = "";
-                ownerEl.value = "";
-                dateEl.value = "";
-              }
-            }}>+ Add Item</button>
+              <div style={{ display: "flex", gap: "0.5rem", background: "rgba(255,255,255,0.02)", padding: "1rem", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.05)" }}>
+                <input type="text" id="action-item-input" placeholder="e.g. Confirm sam.gov target API availability" style={{ flexGrow: 1, padding: "0.6rem 1rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(0,0,0,0.3)", color: "var(--text-primary)", borderRadius: "6px" }} />
+                <input type="text" id="action-owner-input" placeholder="Owner (e.g. Leon)" style={{ width: "160px", padding: "0.6rem 1rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(0,0,0,0.3)", color: "var(--text-primary)", borderRadius: "6px" }} />
+                <input type="text" id="action-date-input" placeholder="Date (YYYY-MM-DD)" style={{ width: "160px", padding: "0.6rem 1rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(0,0,0,0.3)", color: "var(--text-primary)", borderRadius: "6px" }} />
+                <button className="btn btn-outline" style={{ borderColor: "rgba(45,212,191,0.5)", color: "var(--accent)" }} onClick={() => {
+                  const itemEl = document.getElementById("action-item-input");
+                  const ownerEl = document.getElementById("action-owner-input");
+                  const dateEl = document.getElementById("action-date-input");
+                  if (itemEl?.value.trim() && ownerEl?.value.trim() && dateEl?.value.trim()) {
+                    updateDecision("openItems", [...decisions.openItems, {
+                      item: itemEl.value.trim(),
+                      owner: ownerEl.value.trim(),
+                      deadline: dateEl.value.trim()
+                    }]);
+                    itemEl.value = "";
+                    ownerEl.value = "";
+                    dateEl.value = "";
+                  }
+                }}>+ Add</button>
+              </div>
+            </div>
           </div>
         </div>
       ),
@@ -1628,20 +1876,24 @@ export default function WorkshopClient({ latestSubmission, participants }) {
       chapter: "06 Decisions & next steps",
       title: "Ready for the next step",
       content: (
-        <div className="animate-fade-in" style={{ textAlign: "center", padding: "3rem 0" }}>
-          <div style={{ fontSize: "4.5rem", marginBottom: "1.5rem" }}>🚀</div>
-          <h2 style={{ fontSize: "2rem", marginBottom: "1rem", color: "var(--accent)" }}>Workshop Concluded</h2>
-          <p className="subtitle" style={{ maxWidth: "500px", margin: "0 auto 2rem auto", color: "var(--text-secondary)" }}>
-            Today's decisions will be consolidated into the finalized Phase 0 baseline report and used as the direct basis for implementation.
-          </p>
+        <div className="slide-dashboard-layout" style={{ gridTemplateColumns: "1fr" }}>
+          <div className="dashboard-right" style={{ padding: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div className="animate-fade-in" style={{ textAlign: "center", padding: "4rem 2rem", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "12px", maxWidth: "700px", width: "100%" }}>
+              <div style={{ fontSize: "5rem", marginBottom: "1.5rem", filter: "drop-shadow(0 0 20px rgba(45,212,191,0.3))" }}>🚀</div>
+              <h2 style={{ fontSize: "2.5rem", marginBottom: "1rem", color: "var(--accent)" }}>Workshop Concluded</h2>
+              <p className="subtitle" style={{ maxWidth: "540px", margin: "0 auto 3rem auto", color: "var(--text-secondary)", fontSize: "1.1rem", lineHeight: 1.6 }}>
+                Today's decisions will be consolidated into the finalized Phase 0 baseline report and used as the direct basis for implementation.
+              </p>
 
-          <div className="card" style={{ maxWidth: "480px", margin: "0 auto", textAlign: "left" }}>
-            <h4 style={{ fontSize: "0.9rem", color: "var(--text-muted)", textTransform: "uppercase", marginBottom: "0.75rem" }}>Upcoming Milestones</h4>
-            <ul className="slide-list-none" style={{ margin: 0, display: "flex", flexDirection: "column", gap: "0.5rem", fontSize: "0.9rem" }}>
-              <li>1. Consolidation & sharing of confirmed baseline</li>
-              <li>2. Closing of any remaining open action items</li>
-              <li>3. Launch implementation preparation tasks</li>
-            </ul>
+              <div className="card" style={{ maxWidth: "480px", margin: "0 auto", textAlign: "left", padding: "2rem", background: "rgba(0,0,0,0.2)" }}>
+                <h4 style={{ fontSize: "0.9rem", color: "var(--accent)", textTransform: "uppercase", marginBottom: "1.25rem", letterSpacing: "0.05em" }}>Upcoming Milestones</h4>
+                <ul className="slide-list-none" style={{ margin: 0, display: "flex", flexDirection: "column", gap: "1rem", fontSize: "1rem", color: "var(--text-primary)" }}>
+                  <li style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}><span style={{ color: "var(--accent)" }}>1.</span> Consolidation & sharing of confirmed baseline</li>
+                  <li style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}><span style={{ color: "var(--accent)" }}>2.</span> Closing of any remaining open action items</li>
+                  <li style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}><span style={{ color: "var(--accent)" }}>3.</span> Launch implementation preparation tasks</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       ),
@@ -1655,132 +1907,188 @@ export default function WorkshopClient({ latestSubmission, participants }) {
     }
   ];
 
+
+  // Keyboard Navigation Effect
+  useEffect(() => {
+    if (!started) return;
+    const handleKeyDown = (e) => {
+      // Ignore if user is typing in an input
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.tagName === "SELECT") return;
+      
+      if (e.key === "ArrowRight") {
+        setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
+      } else if (e.key === "ArrowLeft") {
+        setCurrentStep((prev) => Math.max(prev - 1, 0));
+      } else if (e.key === "F" || e.key === "f") {
+        if (e.shiftKey) setFacilitatorMode(prev => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [started, steps.length]);
+
+  const enterFullscreen = () => {
+    const el = document.documentElement;
+    if (el.requestFullscreen) {
+      el.requestFullscreen().catch(err => console.log("Fullscreen API error:", err));
+    }
+    setStarted(true);
+  };
+
+  if (!started) {
+    return (
+      <div style={{ height: "100vh", width: "100vw", display: "flex", background: "var(--bg-color)", position: "relative", overflow: "hidden" }}>
+        {/* Ambient Background Blobs */}
+        <div style={{ position: "absolute", top: "-20%", left: "-10%", width: "60vw", height: "60vw", background: "radial-gradient(circle, rgba(45,212,191,0.04) 0%, transparent 60%)", borderRadius: "50%", zIndex: 0 }}></div>
+        <div style={{ position: "absolute", bottom: "-20%", right: "-10%", width: "50vw", height: "50vw", background: "radial-gradient(circle, rgba(45,212,191,0.03) 0%, transparent 60%)", borderRadius: "50%", zIndex: 0 }}></div>
+
+        <div style={{ position: "relative", zIndex: 1, display: "flex", width: "100%", height: "100%", padding: "6rem 10%", alignItems: "center" }}>
+          
+          {/* Left Column: Title & Action */}
+          <div className="animate-fade-in" style={{ flex: "1 1 50%", display: "flex", flexDirection: "column", justifyContent: "center", paddingRight: "4rem" }}>
+            <div style={{ width: "60px", height: "4px", background: "var(--accent)", marginBottom: "2.5rem" }}></div>
+            <h1 style={{ fontSize: "5rem", color: "var(--text-primary)", fontWeight: "300", lineHeight: "1.05", marginBottom: "2rem", letterSpacing: "-0.03em" }}>
+              Phase 0 <br/><span style={{ fontWeight: "700" }}>Workshop.</span>
+            </h1>
+            <p style={{ color: "var(--text-secondary)", fontSize: "1.25rem", marginBottom: "4rem", maxWidth: "480px", lineHeight: "1.6", fontWeight: "300" }}>
+              Review insights, confirm the baseline, and align on the implementation roadmap.
+            </p>
+            
+            <div>
+              <button 
+                className="btn btn-primary" 
+                onClick={enterFullscreen}
+                style={{ fontSize: "1.05rem", padding: "1.25rem 2.5rem", borderRadius: "8px", display: "inline-flex", alignItems: "center", gap: "1rem", letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: "600", transition: "all 0.3s ease", boxShadow: "0 10px 25px rgba(45,212,191,0.15)", border: "none" }}
+              >
+                Begin Session 
+                <span style={{ fontSize: "1.5rem", lineHeight: "1", fontWeight: "400" }}>→</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Right Column: Agenda */}
+          <div className="animate-fade-in" style={{ flex: "1 1 50%", display: "flex", flexDirection: "column", justifyContent: "center", animationDelay: "0.2s" }}>
+            <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "20px", padding: "3.5rem 4.5rem", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 25px 50px rgba(0,0,0,0.2)" }}>
+              <h3 style={{ fontSize: "0.85rem", color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.2em", marginBottom: "3rem", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "1.25rem" }}>
+                Today's Agenda
+              </h3>
+              
+              <ul className="slide-list-none" style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+                {[
+                  { num: "01", title: "Alignment & Project Scope", desc: "Review core assumptions" },
+                  { num: "02", title: "Technical Architecture", desc: "Hosting and integration" },
+                  { num: "03", title: "Tender Scout Baseline", desc: "Data sources and output" },
+                  { num: "04", title: "Innovation Radar Baseline", desc: "Competitors and signals" },
+                  { num: "05", title: "Ownership & Next Steps", desc: "Locking the baseline" }
+                ].map((item, idx) => (
+                  <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: "1.5rem" }}>
+                    <span style={{ color: "rgba(255,255,255,0.15)", fontSize: "1.5rem", fontWeight: "300", fontFamily: "monospace", lineHeight: "1.2" }}>{item.num}</span>
+                    <div>
+                      <h4 style={{ color: "var(--text-primary)", fontSize: "1.2rem", margin: "0 0 0.35rem 0", fontWeight: "400", letterSpacing: "-0.01em" }}>{item.title}</h4>
+                      <span style={{ color: "var(--text-muted)", fontSize: "0.9rem", fontWeight: "300" }}>{item.desc}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const currentChapter = steps[currentStep].chapter;
 
   return (
-    <div className={`container ${facilitatorMode ? "facilitator-layout-split" : ""}`} style={{ maxWidth: facilitatorMode ? "100%" : "1000px", padding: facilitatorMode ? "2rem 4rem" : "2rem 1rem" }}>
+    <div style={{ height: "100vh", width: "100vw", overflow: "hidden", display: "flex", background: "var(--bg-color)", position: "relative" }}>
       
-      {/* HEADER SECTION */}
-      <div className="nav-bar" style={{ marginBottom: "2rem" }}>
-        <div className="nav-logo">K+M Workshop Dashboard</div>
-        <div className="nav-links">
-          <Link href="/" className="nav-link">Questionnaire</Link>
-          <Link href="/agenda" className="nav-link">Agenda</Link>
-          <Link href="/submissions" className="nav-link">Submissions</Link>
-          <button 
-            className={`btn toggle-btn ${facilitatorMode ? "active" : ""}`}
-            onClick={() => setFacilitatorMode(!facilitatorMode)}
-            style={{ marginLeft: "1rem" }}
-          >
-            {facilitatorMode ? "Hide Facilitator View 👤" : "Show Facilitator View 👤"}
-          </button>
-        </div>
-      </div>
-
-      <div style={{ display: "flex", gap: "3rem" }}>
+      {/* FULL BLEED SLIDE CONTAINER */}
+      <div style={{ flexGrow: 1, display: "flex", flexDirection: "column", minHeight: 0, position: "relative" }}>
         
-        {/* CLIENT MAIN PRESENTATION VIEW */}
-        <div className="slide-container" style={{ flexGrow: 1, width: facilitatorMode ? "68%" : "100%" }}>
-          <div className="slide-frame-full" style={{ minHeight: "540px" }}>
-            
-            {/* PROGRESS INDICATOR */}
-            <div className="slide-progress" style={{ margin: 0, height: "4px" }}>
-              <div
-                className="slide-progress-bar"
-                style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
-              ></div>
-            </div>
-
-            <div className="slide-card-full" style={{ minHeight: "480px" }}>
-              <div className="slide-card-header" style={{ paddingBottom: "1rem", marginBottom: "1.5rem" }}>
-                <div>
-                  <span className="badge" style={{ marginBottom: "0.25rem" }}>{currentChapter}</span>
-                  <h2>{steps[currentStep].title}</h2>
-                </div>
-                <span className="time-tag-presentation" style={{ background: "rgba(255,255,255,0.02)", color: "var(--text-muted)" }}>
-                  Slide {currentStep + 1} of {steps.length}
-                </span>
-              </div>
-              <div className="slide-card-body">
-                {steps[currentStep].content}
-              </div>
-            </div>
-
-            {/* CONTROLS */}
-            <div className="slide-controls-bottom" style={{ marginTop: "1.5rem" }}>
-              <button
-                className="btn btn-outline"
-                style={{ minWidth: "120px" }}
-                onClick={handlePrev}
-                disabled={currentStep === 0}
-              >
-                &larr; Previous
-              </button>
-
-              <div className="slide-dots-stepper">
-                {steps.map((s, idx) => (
-                  <button
-                    key={s.id}
-                    className={`slide-dot-btn ${currentStep === idx ? "active" : ""}`}
-                    onClick={() => setCurrentStep(idx)}
-                    style={{ width: "24px", height: "24px", fontSize: "0.6rem" }}
-                  >
-                    {idx + 1}
-                  </button>
-                ))}
-              </div>
-
-              <button
-                className="btn btn-primary"
-                style={{ minWidth: "120px" }}
-                onClick={handleNext}
-                disabled={currentStep === steps.length - 1}
-              >
-                {currentStep === steps.length - 1 ? "Finish" : "Next &rarr;"}
-              </button>
-            </div>
-
-          </div>
+        {/* PROGRESS BAR (Minimalist Top) */}
+        <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "4px", background: "rgba(255,255,255,0.05)", zIndex: 10 }}>
+          <div style={{ width: `${((currentStep + 1) / steps.length) * 100}%`, background: "var(--accent)", height: "100%", transition: "width 0.3s ease" }}></div>
         </div>
 
-        {/* FACILITATOR NOTES PANEL VIEW */}
-        {facilitatorMode && (
-          <div className="facilitator-panel-sidebar card animate-fade-in" style={{ width: "30%", minWidth: "300px", padding: "1.5rem", background: "rgba(45, 212, 191, 0.02)", borderLeft: "2px solid var(--accent)", flexShrink: 0 }}>
-            <h3 style={{ fontSize: "1.2rem", color: "var(--accent)", borderBottom: "1px solid var(--border-color)", paddingBottom: "0.5rem", margin: "0 0 1rem 0" }}>
-              Facilitator Guidelines
-            </h3>
-            
-            <div style={{ display: "flex", gap: "1rem", marginBottom: "1.5rem" }}>
-              <div className="data-group">
-                <span className="data-label">Time Target</span>
-                <span className="data-value" style={{ color: "var(--accent)" }}>{steps[currentStep].facilitator?.time || "—"}</span>
-              </div>
-              <div className="data-group">
-                <span className="data-label">Focus Area</span>
-                <span className="data-value">{steps[currentStep].facilitator?.target || "—"}</span>
-              </div>
+        {/* INVISIBLE NAVIGATION ZONES */}
+        <div 
+          onClick={() => setCurrentStep((prev) => Math.max(prev - 1, 0))}
+          style={{ position: "absolute", left: 0, top: 0, width: "6%", height: "100%", zIndex: 20, cursor: currentStep === 0 ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
+          className="nav-zone"
+          title="Previous Slide (or Left Arrow)"
+        >
+          {currentStep > 0 && <span className="nav-chevron">‹</span>}
+        </div>
+        
+        <div 
+          onClick={() => setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1))}
+          style={{ position: "absolute", right: 0, top: 0, width: "6%", height: "100%", zIndex: 20, cursor: currentStep === steps.length - 1 ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
+          className="nav-zone"
+          title="Next Slide (or Right Arrow)"
+        >
+          {currentStep < steps.length - 1 && <span className="nav-chevron">›</span>}
+        </div>
+
+        {/* SLIDE CONTENT */}
+        <div style={{ flexGrow: 1, padding: "4rem 8%", display: "flex", flexDirection: "column", overflowY: "auto", position: "relative", zIndex: 5 }}>
+          <div style={{ paddingBottom: "1.5rem", marginBottom: "2rem", borderBottom: "1px solid rgba(255,255,255,0.05)", flexShrink: 0, display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+            <div>
+              <span style={{ fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--accent)", display: "block", marginBottom: "0.5rem" }}>{currentChapter}</span>
+              <h2 style={{ color: "var(--text-primary)", fontSize: "2.25rem", margin: 0, fontWeight: "300" }}>{steps[currentStep].title}</h2>
             </div>
-
-            <h4 style={{ fontSize: "0.85rem", textTransform: "uppercase", color: "var(--text-muted)", letterSpacing: "0.05em", marginBottom: "0.75rem" }}>
-              Guiding Notes & Gaps to Lock:
-            </h4>
-            <ul style={{ margin: 0, paddingLeft: "1.2rem", fontSize: "0.9rem", color: "var(--text-secondary)", display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-              {steps[currentStep].facilitator?.notes.map((note, idx) => (
-                <li key={idx} style={{ lineHeight: "1.4" }}>{note}</li>
-              ))}
-            </ul>
-
-            <div style={{ borderTop: "1px solid var(--border-color)", marginTop: "2rem", paddingTop: "1.25rem" }}>
-              <span className="data-label">Private Notes</span>
-              <textarea 
-                placeholder="Type temporary session notes here..."
-                style={{ width: "100%", height: "100px", marginTop: "0.5rem", fontSize: "0.8rem", background: "#0a0a0a", border: "1px solid var(--border-color)" }}
-              />
+            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+              <span style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>{currentStep + 1} / {steps.length}</span>
+              <button 
+                onClick={() => setFacilitatorMode(!facilitatorMode)}
+                style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.1)", color: "var(--text-muted)", padding: "0.4rem 0.8rem", borderRadius: "20px", fontSize: "0.75rem", cursor: "pointer" }}
+                title="Toggle Facilitator Mode (Shift+F)"
+              >
+                {facilitatorMode ? "Hide Notes" : "Show Notes"}
+              </button>
             </div>
           </div>
-        )}
-
+          
+          <div style={{ flexGrow: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
+            {steps[currentStep].content}
+          </div>
+        </div>
       </div>
+
+      {/* FACILITATOR OVERLAY DRAWER */}
+      {facilitatorMode && (
+        <div className="animate-fade-in" style={{ position: "fixed", right: 0, top: 0, width: "28%", minWidth: "300px", maxWidth: "400px", height: "100vh", background: "rgba(11, 15, 25, 0.98)", borderLeft: "1px solid rgba(255,255,255,0.1)", zIndex: 50, padding: "2rem", overflowY: "auto", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "-10px 0 30px rgba(0,0,0,0.5)" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "1rem" }}>
+            <h3 style={{ fontSize: "1.1rem", color: "var(--accent)", margin: 0 }}>Facilitator Notes</h3>
+            <button onClick={() => setFacilitatorMode(false)} style={{ background: "transparent", border: "none", color: "var(--text-muted)", cursor: "pointer", fontSize: "1.5rem" }}>×</button>
+          </div>
+          
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "2rem" }}>
+            <div style={{ background: "rgba(255,255,255,0.03)", padding: "1rem", borderRadius: "8px" }}>
+              <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", textTransform: "uppercase", display: "block", marginBottom: "0.25rem" }}>Time Target</span>
+              <span style={{ color: "var(--accent)", fontSize: "0.95rem", fontWeight: "500" }}>{steps[currentStep].facilitator?.time || "—"}</span>
+            </div>
+            <div style={{ background: "rgba(255,255,255,0.03)", padding: "1rem", borderRadius: "8px" }}>
+              <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", textTransform: "uppercase", display: "block", marginBottom: "0.25rem" }}>Focus Area</span>
+              <span style={{ fontSize: "0.95rem", color: "var(--text-primary)", fontWeight: "500" }}>{steps[currentStep].facilitator?.target || "—"}</span>
+            </div>
+          </div>
+
+          <h4 style={{ fontSize: "0.8rem", textTransform: "uppercase", color: "var(--text-muted)", letterSpacing: "0.05em", marginBottom: "1rem" }}>Guiding Notes</h4>
+          <ul style={{ margin: 0, paddingLeft: "1.2rem", fontSize: "0.9rem", color: "var(--text-secondary)", display: "flex", flexDirection: "column", gap: "1rem" }}>
+            {steps[currentStep].facilitator?.notes.map((note, idx) => (
+              <li key={idx} style={{ lineHeight: "1.5" }}>{note}</li>
+            ))}
+          </ul>
+
+          <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", marginTop: "2rem", paddingTop: "1.5rem" }}>
+            <span style={{ fontSize: "0.8rem", textTransform: "uppercase", color: "var(--text-muted)", letterSpacing: "0.05em", display: "block", marginBottom: "0.75rem" }}>Private Scratchpad</span>
+            <textarea 
+              placeholder="Type temporary session notes here..."
+              style={{ width: "100%", height: "150px", fontSize: "0.9rem", background: "rgba(0,0,0,0.3)", color: "var(--text-primary)", border: "1px solid rgba(255,255,255,0.1)", padding: "0.75rem", borderRadius: "8px", resize: "vertical" }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

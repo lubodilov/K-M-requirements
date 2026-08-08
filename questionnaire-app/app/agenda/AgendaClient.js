@@ -195,6 +195,9 @@ export default function AgendaClient({ latestSubmission, participants }) {
           <Link href="/submissions" className="nav-link">
             Submissions
           </Link>
+          <Link href="/workshop" className="nav-link" style={{ color: "var(--accent)", borderLeft: "1px solid rgba(255,255,255,0.1)", paddingLeft: "1rem", marginLeft: "0.5rem" }}>
+            ▶ Start Workshop
+          </Link>
         </div>
       </div>
 

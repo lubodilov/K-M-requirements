@@ -1,19 +1,19 @@
 :root {
-  /* Color Palette inspired by screenshot */
-  --bg-color: #0b0f19; /* Very dark navy background */
-  --card-bg: #111827; /* Slightly lighter for cards */
+  /* Premium Dark Theme (Lightened as requested) */
+  --bg-color: #111827; /* Slightly lighter navy background */
+  --card-bg: #1f2937; /* Lighter for cards to pop */
   --text-primary: #ffffff;
-  --text-secondary: #9ca3af; /* Clean gray for subtext */
-  --text-muted: #6b7280;
+  --text-secondary: #d1d5db; /* Clearer light gray for subtext */
+  --text-muted: #9ca3af;
   
   --accent: #2dd4bf; /* Vibrant teal/cyan */
   --accent-hover: #14b8a6;
   
-  --border-color: #1f2937; /* Subtle dark borders */
-  --input-bg: #1f2937;
+  --border-color: rgba(255, 255, 255, 0.15); /* Slightly more visible borders */
+  --input-bg: rgba(255, 255, 255, 0.08);
   
   --danger: #ef4444;
-  --danger-bg: rgba(239, 68, 68, 0.1);
+  --danger-bg: rgba(239, 68, 68, 0.15);
   --success: #10b981;
   
   --font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -120,8 +120,11 @@ p {
   background-color: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: 12px;
-  padding: 2.5rem;
-  margin-bottom: 2rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 /* Forms */
@@ -162,8 +165,9 @@ input[type="email"]:focus,
 textarea:focus,
 select:focus {
   outline: none;
-  background-color: #273345;
+  background-color: rgba(255, 255, 255, 0.1);
   border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(45, 212, 191, 0.2);
 }
 
 textarea {
@@ -196,7 +200,8 @@ textarea {
 
 .btn-primary {
   background-color: var(--accent);
-  color: #000000; /* Dark text for contrast against teal */
+  color: #0b0f19; /* Dark text for contrast against neon teal */
+  box-shadow: 0 4px 14px 0 rgba(45, 212, 191, 0.39);
 }
 
 .btn-primary:hover {
@@ -209,11 +214,13 @@ textarea {
   border: 1px solid var(--border-color);
   padding: 0.6rem 1.25rem;
   font-size: 0.875rem;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 .btn-outline:hover {
   background-color: rgba(255, 255, 255, 0.05);
   border-color: var(--text-secondary);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.3);
 }
 
 .btn-danger {
@@ -685,29 +692,19 @@ textarea {
 }
 
 .slide-card-full {
-  background-color: var(--card-bg);
+  background-color: rgba(17, 24, 39, 0.7); /* Translucent dark navy for glass effect */
   border: 1px solid var(--border-color);
   border-radius: 12px;
-  padding: 3rem;
-  min-height: 480px;
+  padding: 2rem;
+  height: calc(100vh - 120px); /* 100vh minus navbar and padding */
   display: flex;
   flex-direction: column;
-  box-shadow: 0 12px 40px -12px rgba(0, 0, 0, 0.85);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   position: relative;
   overflow: hidden;
-  animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   width: 100%;
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .slide-card-header {
@@ -1134,14 +1131,14 @@ textarea {
   padding: 1.5rem;
 }
 
-/* Document Mode Animations */
-.animate-fade-in {
-  animation: fadeIn 0.4s ease;
+/* Premium Smooth Animations */
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.animate-fade-in {
+  animation: slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Submissions Page Styles */
@@ -1316,11 +1313,11 @@ textarea {
 }
 
 .slide-frame-full {
-  background: #0d0d0d;
+  background: var(--card-bg);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border-radius: 4px;
   padding: 2.5rem;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -1354,7 +1351,7 @@ textarea {
   font-weight: 700;
   letter-spacing: -0.02em;
   margin: 0.5rem 0 0 0;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .time-tag-presentation {
@@ -1438,3 +1435,92 @@ textarea {
   margin: 0;
 }
 
+
+/* Premium Dashboard Layout for Slides */
+.slide-dashboard-layout {
+  display: grid;
+  grid-template-columns: 1fr 2.5fr;
+  gap: 2.5rem;
+  height: 100%;
+}
+
+.dashboard-left {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  border-right: 1px solid var(--border-color);
+  padding-right: 2.5rem;
+}
+
+.dashboard-right {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* Hide scrollbar for clean look */
+.dashboard-right::-webkit-scrollbar {
+  width: 6px;
+}
+.dashboard-right::-webkit-scrollbar-track {
+  background: transparent;
+}
+.dashboard-right::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+}
+.dashboard-right::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.context-box {
+  background: rgba(255,255,255,0.02);
+  padding: 1.25rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.context-title {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+.context-content {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Invisible Full-Screen Navigation Zones */
+.nav-zone {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: linear-gradient(to right, rgba(0,0,0,0.5), transparent);
+}
+
+.nav-zone.nav-zone-right {
+  background: linear-gradient(to left, rgba(0,0,0,0.5), transparent);
+}
+
+.nav-zone:hover {
+  opacity: 1;
+}
+
+.nav-chevron {
+  font-size: 4rem;
+  color: rgba(255,255,255,0.7);
+  user-select: none;
+  font-weight: 300;
+  text-shadow: 0 0 20px rgba(0,0,0,0.5);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.nav-zone:hover .nav-chevron {
+  color: var(--text-primary);
+  transform: scale(1.1);
+}
