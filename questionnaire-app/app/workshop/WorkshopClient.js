@@ -23,7 +23,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
     // Step 4: Baseline Confirmation
     baselineChanges: "",
     baselineStatus: "Draft", // Confirmed, Discuss, Draft
-    
+
     // Step 6: Geography (Tender Scout)
     tsGeoRelease1: ["Germany", "France", "Switzerland", "Austria"],
     tsGeoNext: ["Italy", "Spain", "United Kingdom"],
@@ -72,7 +72,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
 
     // Step 11: Output & Release 1 (Tender Scout)
     tsOutputExperience: "Dashboard", // Dashboard, Digest, Both
-    tsAlertRecipient: "Sales Team", 
+    tsAlertRecipient: "Sales Team",
     tsAlertFrequency: "Daily",
     tsMustHaves: "Daily dashboard showing matches with highlighted matching terms",
     tsNiceToHaves: "Automated daily email digests",
@@ -395,13 +395,13 @@ export default function WorkshopClient({ latestSubmission, participants }) {
           <div style={{ marginTop: "2rem", borderTop: "1px solid var(--border-color)", paddingTop: "1.5rem" }}>
             <h4 style={{ marginBottom: "1rem" }}>Has anything materially changed since our previous alignment?</h4>
             <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-              <button 
+              <button
                 className={`btn ${decisions.baselineStatus === "Confirmed" ? "btn-primary" : "btn-outline"}`}
                 onClick={() => updateDecision("baselineStatus", "Confirmed")}
               >
                 No — baseline confirmed ✓
               </button>
-              <button 
+              <button
                 className={`btn ${decisions.baselineStatus === "Discuss" ? "btn-primary" : "btn-outline"}`}
                 onClick={() => updateDecision("baselineStatus", "Discuss")}
               >
@@ -409,8 +409,8 @@ export default function WorkshopClient({ latestSubmission, participants }) {
               </button>
             </div>
             {decisions.baselineStatus === "Discuss" && (
-              <textarea 
-                className="form-group" 
+              <textarea
+                className="form-group"
                 style={{ marginTop: "1rem", width: "100%", height: "80px" }}
                 value={decisions.baselineChanges}
                 onChange={(e) => updateDecision("baselineChanges", e.target.value)}
@@ -491,7 +491,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
               <p className="context-content">Define the exact countries that form the first implementation scope within these regions.</p>
             </div>
           </div>
-          
+
           <div className="dashboard-right">
             <h3 style={{ fontSize: "0.85rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "1rem" }}>Decision</h3>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
@@ -594,7 +594,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
                   <span className="data-label" style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.5)" }}>Priority: {p.priority}</span>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: "0.25rem", marginTop: "0.5rem" }}>
                     {["Release 1", "Later", "Not Required"].map(sel => (
-                      <button 
+                      <button
                         key={sel}
                         className={`btn toggle-btn ${p.selection === sel ? "active" : ""}`}
                         style={{ fontSize: "0.75rem", padding: "0.3rem 0.5rem", flexGrow: 1, border: p.selection === sel ? "1px solid var(--accent)" : "1px solid rgba(255,255,255,0.1)", background: p.selection === sel ? "rgba(45, 212, 191, 0.1)" : "transparent", color: p.selection === sel ? "var(--text-primary)" : "var(--text-muted)" }}
@@ -614,8 +614,8 @@ export default function WorkshopClient({ latestSubmission, participants }) {
 
             <div className="form-group" style={{ marginTop: "1rem" }}>
               <label style={{ fontWeight: "600", fontSize: "0.85rem" }}>Are any must-have tender sources missing from this list?</label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={decisions.tsMissingSources}
                 onChange={(e) => updateDecision("tsMissingSources", e.target.value)}
                 placeholder="e.g. Simap.ch (Switzerland), etc..."
@@ -643,7 +643,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
           <div className="dashboard-left">
             <div className="context-box">
               <div className="context-title">What you told us</div>
-              <p className="context-content">Project types: Not explicitly defined.<br/>Exclusions: Not explicitly defined.</p>
+              <p className="context-content">Project types: Not explicitly defined.<br />Exclusions: Not explicitly defined.</p>
             </div>
             <div className="context-box" style={{ background: "rgba(45, 212, 191, 0.05)", borderColor: "rgba(45, 212, 191, 0.2)" }}>
               <div className="context-title" style={{ color: "var(--accent)" }}>What we need to lock today</div>
@@ -700,7 +700,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
                 <div className="form-group" style={{ marginBottom: 0 }}>
                   <label style={{ fontWeight: "500", fontSize: "0.8rem", color: "var(--accent)" }}>Example of RELEVANT tender:</label>
-                  <textarea 
+                  <textarea
                     value={decisions.tsExampleRelevant}
                     onChange={(e) => updateDecision("tsExampleRelevant", e.target.value)}
                     placeholder="e.g. 'Installation of 15km overhead contact lines between Zurich and Bern...'"
@@ -709,7 +709,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
                 </div>
                 <div className="form-group" style={{ marginBottom: 0 }}>
                   <label style={{ fontWeight: "500", fontSize: "0.8rem", color: "var(--danger)" }}>Example of IRRELEVANT tender:</label>
-                  <textarea 
+                  <textarea
                     value={decisions.tsExampleIrrelevant}
                     onChange={(e) => updateDecision("tsExampleIrrelevant", e.target.value)}
                     placeholder="e.g. 'Delivery of 10 new electric locomotives...'"
@@ -739,7 +739,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
           <div className="dashboard-left">
             <div className="context-box">
               <div className="context-title">What you told us</div>
-              <p className="context-content">Core domain terms: Rail, Catenary, Trolleybus, Light rail, Tram.<br/><br/>Technical terms: Cantilever / Ausleger, Fahrdraht / Contact Wire.</p>
+              <p className="context-content">Core domain terms: Rail, Catenary, Trolleybus, Light rail, Tram.<br /><br />Technical terms: Cantilever / Ausleger, Fahrdraht / Contact Wire.</p>
             </div>
             <div className="context-box" style={{ background: "rgba(45, 212, 191, 0.05)", borderColor: "rgba(45, 212, 191, 0.2)" }}>
               <div className="context-title" style={{ color: "var(--accent)" }}>What we need to lock today</div>
@@ -789,8 +789,8 @@ export default function WorkshopClient({ latestSubmission, participants }) {
             <div className="card" style={{ padding: "1.25rem" }}>
               <div className="form-group" style={{ marginBottom: 0 }}>
                 <label style={{ fontWeight: "500", fontSize: "0.8rem", color: "var(--text-secondary)" }}>Are important synonyms, translations, or technical terms missing?</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={decisions.tsKeywordSynonyms}
                   onChange={(e) => updateDecision("tsKeywordSynonyms", e.target.value)}
                   placeholder="e.g. Oberleitung (German), Caténaire (French)..."
@@ -831,7 +831,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
             <div className="card" style={{ padding: "1.5rem" }}>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.5rem" }}>
                 {["Yes — important for Release 1", "Useful later", "Not required"].map(opt => (
-                  <button 
+                  <button
                     key={opt}
                     className={`btn toggle-btn ${decisions.tsTrackContractors === opt ? "active" : ""}`}
                     style={{ border: decisions.tsTrackContractors === opt ? "1px solid var(--accent)" : "1px solid rgba(255,255,255,0.1)", background: decisions.tsTrackContractors === opt ? "rgba(45, 212, 191, 0.1)" : "transparent", color: decisions.tsTrackContractors === opt ? "var(--text-primary)" : "var(--text-muted)", padding: "0.75rem", fontSize: "0.8rem" }}
@@ -846,7 +846,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
               {decisions.tsTrackContractors === "Yes — important for Release 1" && (
                 <div className="form-group animate-fade-in" style={{ marginTop: "1.5rem", marginBottom: 0 }}>
                   <label style={{ fontWeight: "500", fontSize: "0.8rem", color: "var(--text-secondary)" }}>Which contractors should form the initial watchlist?</label>
-                  <textarea 
+                  <textarea
                     value={decisions.tsContractorWatchlist}
                     onChange={(e) => updateDecision("tsContractorWatchlist", e.target.value)}
                     placeholder="e.g. Siemens Mobility, Alstom, Colas Rail..."
@@ -890,8 +890,8 @@ export default function WorkshopClient({ latestSubmission, participants }) {
                 <span className="data-label" style={{ fontSize: "0.75rem", color: "var(--text-muted)", textTransform: "uppercase" }}>Primary Experience</span>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
                   {["Dashboard", "Email Digest", "Both"].map(opt => (
-                    <button 
-                      key={opt} 
+                    <button
+                      key={opt}
                       className={`btn toggle-btn ${decisions.tsOutputExperience === opt ? "active" : ""}`}
                       onClick={() => updateDecision("tsOutputExperience", opt)}
                       style={{ fontSize: "0.8rem", padding: "0.5rem", flexGrow: 1, border: decisions.tsOutputExperience === opt ? "1px solid var(--accent)" : "1px solid rgba(255,255,255,0.1)", background: decisions.tsOutputExperience === opt ? "rgba(45, 212, 191, 0.1)" : "transparent", color: decisions.tsOutputExperience === opt ? "var(--text-primary)" : "var(--text-muted)" }}
@@ -904,7 +904,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
 
               <div className="card" style={{ padding: "1.5rem", marginBottom: 0, display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                 <span className="data-label" style={{ fontSize: "0.75rem", color: "var(--text-muted)", textTransform: "uppercase" }}>Cadence / Frequency</span>
-                <select 
+                <select
                   value={decisions.tsAlertFrequency}
                   onChange={(e) => updateDecision("tsAlertFrequency", e.target.value)}
                   style={{ background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.1)", padding: "0.6rem", borderRadius: "6px", color: "var(--text-primary)", fontSize: "0.85rem" }}
@@ -919,8 +919,8 @@ export default function WorkshopClient({ latestSubmission, participants }) {
             <div className="card" style={{ padding: "1.5rem", marginBottom: "1rem" }}>
               <div className="form-group" style={{ marginBottom: 0 }}>
                 <label style={{ fontWeight: "500", fontSize: "0.85rem", color: "var(--text-primary)", display: "block", marginBottom: "0.5rem" }}>Alert Recipient(s)</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={decisions.tsAlertRecipient}
                   onChange={(e) => updateDecision("tsAlertRecipient", e.target.value)}
                   placeholder="e.g. Sales Team"
@@ -933,7 +933,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
                 <div className="form-group" style={{ marginBottom: 0 }}>
                   <label style={{ fontWeight: "500", fontSize: "0.85rem", color: "var(--accent)", display: "block", marginBottom: "0.5rem" }}>Release 1 must-haves:</label>
-                  <textarea 
+                  <textarea
                     value={decisions.tsMustHaves}
                     onChange={(e) => updateDecision("tsMustHaves", e.target.value)}
                     style={{ height: "60px", padding: "0.75rem", border: "1px solid rgba(45,212,191,0.2)", background: "rgba(45,212,191,0.05)", color: "var(--text-primary)", borderRadius: "6px" }}
@@ -941,7 +941,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
                 </div>
                 <div className="form-group" style={{ marginBottom: 0 }}>
                   <label style={{ fontWeight: "500", fontSize: "0.85rem", color: "var(--text-muted)", display: "block", marginBottom: "0.5rem" }}>Useful later (Nice-to-haves):</label>
-                  <textarea 
+                  <textarea
                     value={decisions.tsNiceToHaves}
                     onChange={(e) => updateDecision("tsNiceToHaves", e.target.value)}
                     style={{ height: "60px", padding: "0.75rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", borderRadius: "6px" }}
@@ -1003,7 +1003,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
             </div>
 
             <div style={{ marginTop: "1rem" }}>
-              <button 
+              <button
                 className="btn toggle-btn"
                 onClick={() => updateDecision("tsGeoStatus", "Confirmed")}
                 style={{ width: "100%", padding: "1rem", fontSize: "1rem", border: decisions.tsGeoStatus === "Confirmed" ? "1px solid var(--accent)" : "1px solid rgba(255,255,255,0.2)", background: decisions.tsGeoStatus === "Confirmed" ? "rgba(45, 212, 191, 0.1)" : "rgba(255,255,255,0.05)", color: decisions.tsGeoStatus === "Confirmed" ? "var(--text-primary)" : "var(--text-muted)" }}
@@ -1033,7 +1033,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
           <div className="dashboard-left">
             <div className="context-box">
               <div className="context-title">What you told us</div>
-              <p className="context-content">Competitors: Elektroline, Furrer + Frey, Arthur Flury, Alstom, Siemens, SPL Powerlines (All High)<br/><br/>Technology themes: De-icing systems, Catenary systems (High), Trolleybuses, Light rail, Overhead lines<br/><br/>Market & Resources: Infrastructure (High), Copper (High), Aluminium (Medium)</p>
+              <p className="context-content">Competitors: Elektroline, Furrer + Frey, Arthur Flury, Alstom, Siemens, SPL Powerlines (All High)<br /><br />Technology themes: De-icing systems, Catenary systems (High), Trolleybuses, Light rail, Overhead lines<br /><br />Market & Resources: Infrastructure (High), Copper (High), Aluminium (Medium)</p>
             </div>
             <div className="context-box" style={{ background: "rgba(45, 212, 191, 0.05)", borderColor: "rgba(45, 212, 191, 0.2)" }}>
               <div className="context-title" style={{ color: "var(--accent)" }}>What we need to lock today</div>
@@ -1089,8 +1089,8 @@ export default function WorkshopClient({ latestSubmission, participants }) {
                 {["New products/technologies", "Major projects", "Partnerships", "Strategic announcements", "Market expansion"].map(dev => {
                   const isSelected = decisions.irCompetitorDevelopments.includes(dev);
                   return (
-                    <button 
-                      key={dev} 
+                    <button
+                      key={dev}
                       className={`btn toggle-btn ${isSelected ? "active" : ""}`}
                       style={{ border: isSelected ? "1px solid var(--accent)" : "1px solid rgba(255,255,255,0.1)", background: isSelected ? "rgba(45, 212, 191, 0.1)" : "rgba(255,255,255,0.05)", color: isSelected ? "var(--text-primary)" : "var(--text-secondary)", padding: "0.4rem 0.75rem", fontSize: "0.8rem", borderRadius: "6px" }}
                       onClick={() => {
@@ -1116,7 +1116,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
                 {decisions.irCompetitors.map((comp, idx) => (
                   <div key={comp.name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0.75rem 1rem", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "6px" }}>
                     <span style={{ fontSize: "0.85rem", fontWeight: "500", color: "var(--text-primary)" }}>{comp.name}</span>
-                    <select 
+                    <select
                       value={comp.tier}
                       onChange={(e) => {
                         const copy = [...decisions.irCompetitors];
@@ -1176,7 +1176,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
                     <tr key={tech.name} style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
                       <td style={{ fontWeight: "500", padding: "0.75rem", color: "var(--text-primary)", fontSize: "0.9rem" }}>{tech.name}</td>
                       <td style={{ padding: "0.75rem" }}>
-                        <select 
+                        <select
                           value={tech.priority}
                           onChange={(e) => {
                             const copy = [...decisions.irTechTopics];
@@ -1193,7 +1193,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
                       <td style={{ padding: "0.75rem" }}>
                         <div style={{ display: "flex", gap: "0.25rem" }}>
                           {["Release 1", "Later"].map(sel => (
-                            <button 
+                            <button
                               key={sel}
                               className={`btn toggle-btn ${tech.selection === sel ? "active" : ""}`}
                               style={{ fontSize: "0.75rem", padding: "0.3rem 0.5rem", border: tech.selection === sel ? "1px solid var(--accent)" : "1px solid rgba(255,255,255,0.1)", background: tech.selection === sel ? "rgba(45,212,191,0.1)" : "transparent", color: tech.selection === sel ? "var(--text-primary)" : "var(--text-muted)", borderRadius: "4px" }}
@@ -1265,7 +1265,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
                 {["Infrastructure investment trends", "Pricing pressure", "Supply chain issues", "Government subsidies", "Decarbonization mandates"].map(sig => {
                   const isSelected = decisions.irMarketSignals.includes(sig);
                   return (
-                    <button 
+                    <button
                       key={sig}
                       className={`btn toggle-btn ${isSelected ? "active" : ""}`}
                       style={{ border: isSelected ? "1px solid var(--accent)" : "1px solid rgba(255,255,255,0.1)", background: isSelected ? "rgba(45, 212, 191, 0.1)" : "rgba(255,255,255,0.05)", color: isSelected ? "var(--text-primary)" : "var(--text-secondary)", padding: "0.5rem 1rem", fontSize: "0.85rem", borderRadius: "6px" }}
@@ -1283,7 +1283,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
                   );
                 })}
               </div>
-              
+
               <div style={{ display: "flex", gap: "0.5rem" }}>
                 <input type="text" id="add-market-input" placeholder="e.g. Overhead line standardization directives..." style={{ flexGrow: 1, padding: "0.6rem 1rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", borderRadius: "6px" }} />
                 <button className="btn btn-outline" style={{ padding: "0.6rem 1.25rem", borderColor: "rgba(255,255,255,0.2)", color: "var(--text-primary)" }} onClick={() => {
@@ -1333,8 +1333,8 @@ export default function WorkshopClient({ latestSubmission, participants }) {
                     const isChecked = decisions.irResourcesCopper.includes(opt);
                     return (
                       <label key={opt} style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer", color: "var(--text-primary)", fontSize: "0.9rem" }}>
-                        <input 
-                          type="checkbox" 
+                        <input
+                          type="checkbox"
                           checked={isChecked}
                           onChange={() => {
                             if (isChecked) {
@@ -1358,8 +1358,8 @@ export default function WorkshopClient({ latestSubmission, participants }) {
                     const isChecked = decisions.irResourcesAluminium.includes(opt);
                     return (
                       <label key={opt} style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer", color: "var(--text-primary)", fontSize: "0.9rem" }}>
-                        <input 
-                          type="checkbox" 
+                        <input
+                          type="checkbox"
                           checked={isChecked}
                           onChange={() => {
                             if (isChecked) {
@@ -1412,7 +1412,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
                 { id: "Option B", label: "Option B", desc: "nelio proposes a target list based on confirmed tech themes, and K+M validates it." },
                 { id: "Option C", label: "Option C", desc: "A combination: nelio provides a seed set, and K+M adds mandatory sources." }
               ].map(opt => (
-                <div 
+                <div
                   key={opt.id}
                   className={`card ${decisions.irSourcesApproach === opt.id ? "active-card" : ""}`}
                   style={{ cursor: "pointer", border: decisions.irSourcesApproach === opt.id ? "1px solid var(--accent)" : "1px solid rgba(255,255,255,0.1)", background: decisions.irSourcesApproach === opt.id ? "rgba(45, 212, 191, 0.1)" : "rgba(255,255,255,0.02)", padding: "1.25rem", marginBottom: 0 }}
@@ -1430,8 +1430,8 @@ export default function WorkshopClient({ latestSubmission, participants }) {
             <div className="card" style={{ padding: "1.5rem" }}>
               <div className="form-group" style={{ marginBottom: 0 }}>
                 <label style={{ fontWeight: "500", fontSize: "0.85rem", color: "var(--text-primary)" }}>Are there any initial sources you consider mandatory or particularly trusted?</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={decisions.irMandatorySources}
                   onChange={(e) => updateDecision("irMandatorySources", e.target.value)}
                   placeholder="e.g. UITP publications, Railway Gazette..."
@@ -1472,7 +1472,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
             <div className="card" style={{ padding: "1.5rem" }}>
               <div className="form-group" style={{ marginBottom: "1.5rem" }}>
                 <label style={{ fontWeight: "500", fontSize: "0.9rem", color: "var(--text-primary)", marginBottom: "0.5rem", display: "block" }}>Specify core terms, synonyms, and relevant technology names:</label>
-                <textarea 
+                <textarea
                   value={decisions.irSeedWatchlist}
                   onChange={(e) => updateDecision("irSeedWatchlist", e.target.value)}
                   style={{ height: "140px", padding: "1rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", borderRadius: "6px" }}
@@ -1517,7 +1517,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
                 <span className="data-label" style={{ fontSize: "0.75rem", color: "var(--text-muted)", textTransform: "uppercase" }}>Experience Delivery</span>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
                   {["Dashboard", "Weekly Digest", "Both"].map(opt => (
-                    <button 
+                    <button
                       key={opt}
                       className={`btn toggle-btn ${decisions.irOutputExperience === opt ? "active" : ""}`}
                       onClick={() => updateDecision("irOutputExperience", opt)}
@@ -1531,7 +1531,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
 
               <div className="card" style={{ padding: "1.5rem", marginBottom: 0, display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                 <span className="data-label" style={{ fontSize: "0.75rem", color: "var(--text-muted)", textTransform: "uppercase" }}>Push Cadence</span>
-                <select 
+                <select
                   value={decisions.irAlertFrequency}
                   onChange={(e) => updateDecision("irAlertFrequency", e.target.value)}
                   style={{ background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.1)", padding: "0.6rem", borderRadius: "6px", color: "var(--text-primary)", fontSize: "0.85rem" }}
@@ -1546,8 +1546,8 @@ export default function WorkshopClient({ latestSubmission, participants }) {
             <div className="card" style={{ padding: "1.5rem", marginBottom: "1rem" }}>
               <div className="form-group" style={{ marginBottom: 0 }}>
                 <label style={{ fontWeight: "500", fontSize: "0.85rem", color: "var(--text-primary)", display: "block", marginBottom: "0.5rem" }}>Alert Recipient(s)</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={decisions.irAlertRecipient}
                   onChange={(e) => updateDecision("irAlertRecipient", e.target.value)}
                   placeholder="e.g. Dennis Darra + Franc Dugal"
@@ -1560,7 +1560,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
                 <div className="form-group" style={{ marginBottom: 0 }}>
                   <label style={{ fontWeight: "500", fontSize: "0.85rem", color: "var(--accent)", display: "block", marginBottom: "0.5rem" }}>Release 1 must-haves:</label>
-                  <textarea 
+                  <textarea
                     value={decisions.irMustHaves}
                     onChange={(e) => updateDecision("irMustHaves", e.target.value)}
                     style={{ height: "60px", padding: "0.75rem", border: "1px solid rgba(45,212,191,0.2)", background: "rgba(45,212,191,0.05)", color: "var(--text-primary)", borderRadius: "6px" }}
@@ -1568,7 +1568,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
                 </div>
                 <div className="form-group" style={{ marginBottom: 0 }}>
                   <label style={{ fontWeight: "500", fontSize: "0.85rem", color: "var(--text-muted)", display: "block", marginBottom: "0.5rem" }}>Useful later (Nice-to-haves):</label>
-                  <textarea 
+                  <textarea
                     value={decisions.irNiceToHaves}
                     onChange={(e) => updateDecision("irNiceToHaves", e.target.value)}
                     style={{ height: "60px", padding: "0.75rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", borderRadius: "6px" }}
@@ -1629,7 +1629,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
             </div>
 
             <div style={{ marginTop: "1rem" }}>
-              <button 
+              <button
                 className="btn toggle-btn"
                 onClick={() => updateDecision("irTechStatus", "Confirmed")}
                 style={{ width: "100%", padding: "1rem", fontSize: "1rem", border: decisions.irTechStatus === "Confirmed" ? "1px solid var(--accent)" : "1px solid rgba(255,255,255,0.2)", background: decisions.irTechStatus === "Confirmed" ? "rgba(45, 212, 191, 0.1)" : "rgba(255,255,255,0.05)", color: decisions.irTechStatus === "Confirmed" ? "var(--text-primary)" : "var(--text-muted)" }}
@@ -1692,9 +1692,9 @@ export default function WorkshopClient({ latestSubmission, participants }) {
             <div className="card" style={{ padding: "1.5rem" }}>
               <div className="form-group" style={{ marginBottom: 0 }}>
                 <label style={{ fontWeight: "500", fontSize: "1rem", color: "var(--accent)", display: "block", marginBottom: "0.75rem" }}>Who gives final business confirmation of the Phase 0 baseline?</label>
-                <input 
-                  type="text" 
-                  value={decisions.finalSignoffOwner} 
+                <input
+                  type="text"
+                  value={decisions.finalSignoffOwner}
                   onChange={(e) => updateDecision("finalSignoffOwner", e.target.value)}
                   placeholder="e.g. Fawzi Fattel & Dennis Darra"
                   style={{ padding: "0.75rem", border: "1px solid rgba(45,212,191,0.3)", background: "rgba(45,212,191,0.05)", color: "var(--text-primary)", borderRadius: "6px", width: "100%", fontSize: "1rem" }}
@@ -1734,7 +1734,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
             <div className="card" style={{ padding: "1.5rem" }}>
               <div className="form-group" style={{ marginBottom: 0 }}>
                 <label style={{ fontWeight: "500", fontSize: "0.95rem", color: "var(--text-primary)", display: "block", marginBottom: "0.75rem" }}>Are there any additional compliance, architecture, or timing constraints to track?</label>
-                <textarea 
+                <textarea
                   value={decisions.additionalConstraints}
                   onChange={(e) => updateDecision("additionalConstraints", e.target.value)}
                   style={{ height: "140px", padding: "1rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", borderRadius: "6px" }}
@@ -1764,14 +1764,14 @@ export default function WorkshopClient({ latestSubmission, participants }) {
           <div className="dashboard-right" style={{ padding: "0" }}>
             <div className="card" style={{ padding: "2rem" }}>
               <p className="slide-p" style={{ marginBottom: "2rem", color: "var(--text-secondary)", fontSize: "1rem" }}>This is the consolidated implementation baseline built live from your workshop decisions.</p>
-              
+
               <div className="grid-2" style={{ gap: "2rem" }}>
                 <div style={{ background: "rgba(255,255,255,0.02)", padding: "1.5rem", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.05)" }}>
                   <h3 style={{ color: "var(--accent)", fontSize: "1.25rem", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "0.75rem", marginBottom: "1rem" }}>Tender Scout</h3>
                   <ul className="slide-list-none" style={{ fontSize: "0.95rem", display: "flex", flexDirection: "column", gap: "1rem", color: "var(--text-primary)" }}>
                     <li style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}><strong style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase" }}>Priority Geography</strong> {decisions.tsGeoRelease1.join(", ") || "—"}</li>
                     <li style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}><strong style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase" }}>Release 1 Sources</strong> {decisions.tsPortals.filter(p => p.selection === "Release 1").map(p => p.id).join(", ") || "—"}</li>
-                    <li style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}><strong style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase" }}>Includes / Excludes</strong> In: {decisions.tsIncludes.join(" / ") || "—"} <br/> Ex: {decisions.tsExcludes.join(" / ") || "—"}</li>
+                    <li style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}><strong style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase" }}>Includes / Excludes</strong> In: {decisions.tsIncludes.join(" / ") || "—"} <br /> Ex: {decisions.tsExcludes.join(" / ") || "—"}</li>
                     <li style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}><strong style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase" }}>Keywords Grouping</strong> {decisions.tsKeywordsStrong.slice(0, 4).join(", ")} ...</li>
                     <li style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}><strong style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase" }}>Contractor Watchlist</strong> {decisions.tsTrackContractors} {decisions.tsContractorWatchlist ? `(${decisions.tsContractorWatchlist})` : ""}</li>
                     <li style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}><strong style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase" }}>Experience cadence</strong> {decisions.tsOutputExperience} / {decisions.tsAlertFrequency}</li>
@@ -1812,7 +1812,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
           <div className="dashboard-right" style={{ padding: 0 }}>
             <div className="card" style={{ padding: "2rem" }}>
               <p className="slide-p" style={{ marginBottom: "1.5rem", color: "var(--text-secondary)" }}>Actions and deliverables to complete after the baseline lock.</p>
-              
+
               <div className="data-table-wrapper" style={{ margin: "0 0 1.5rem 0", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", overflow: "hidden" }}>
                 <table className="data-table" style={{ width: "100%", borderCollapse: "collapse" }}>
                   <thead>
@@ -1877,8 +1877,8 @@ export default function WorkshopClient({ latestSubmission, participants }) {
       title: "Ready for the next step",
       content: (
         <div className="slide-dashboard-layout" style={{ gridTemplateColumns: "1fr" }}>
-          <div className="dashboard-right" style={{ padding: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <div className="animate-fade-in" style={{ textAlign: "center", padding: "4rem 2rem", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "12px", maxWidth: "700px", width: "100%" }}>
+          <div className="dashboard-right" style={{ padding: 0, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+            <div className="animate-fade-in" style={{ margin: "auto", textAlign: "center", padding: "4rem 2rem", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "12px", maxWidth: "700px", width: "100%" }}>
               <div style={{ fontSize: "5rem", marginBottom: "1.5rem", filter: "drop-shadow(0 0 20px rgba(45,212,191,0.3))" }}>🚀</div>
               <h2 style={{ fontSize: "2.5rem", marginBottom: "1rem", color: "var(--accent)" }}>Workshop Concluded</h2>
               <p className="subtitle" style={{ maxWidth: "540px", margin: "0 auto 3rem auto", color: "var(--text-secondary)", fontSize: "1.1rem", lineHeight: 1.6 }}>
@@ -1914,7 +1914,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
     const handleKeyDown = (e) => {
       // Ignore if user is typing in an input
       if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.tagName === "SELECT") return;
-      
+
       if (e.key === "ArrowRight") {
         setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
       } else if (e.key === "ArrowLeft") {
@@ -1937,30 +1937,30 @@ export default function WorkshopClient({ latestSubmission, participants }) {
 
   if (!started) {
     return (
-      <div style={{ height: "100vh", width: "100vw", display: "flex", background: "var(--bg-color)", position: "relative", overflow: "hidden" }}>
+      <div style={{ height: "100vh", width: "100vw", display: "flex", background: "var(--bg-color)", position: "relative", overflowY: "auto", overflowX: "hidden" }}>
         {/* Ambient Background Blobs */}
         <div style={{ position: "absolute", top: "-20%", left: "-10%", width: "60vw", height: "60vw", background: "radial-gradient(circle, rgba(45,212,191,0.04) 0%, transparent 60%)", borderRadius: "50%", zIndex: 0 }}></div>
         <div style={{ position: "absolute", bottom: "-20%", right: "-10%", width: "50vw", height: "50vw", background: "radial-gradient(circle, rgba(45,212,191,0.03) 0%, transparent 60%)", borderRadius: "50%", zIndex: 0 }}></div>
 
-        <div style={{ position: "relative", zIndex: 1, display: "flex", width: "100%", height: "100%", padding: "6rem 10%", alignItems: "center" }}>
-          
+        <div style={{ position: "relative", zIndex: 1, display: "flex", width: "100%", minHeight: "100%", padding: "3rem 8%", alignItems: "center", flexWrap: "wrap" }}>
+
           {/* Left Column: Title & Action */}
           <div className="animate-fade-in" style={{ flex: "1 1 50%", display: "flex", flexDirection: "column", justifyContent: "center", paddingRight: "4rem" }}>
             <div style={{ width: "60px", height: "4px", background: "var(--accent)", marginBottom: "2.5rem" }}></div>
-            <h1 style={{ fontSize: "5rem", color: "var(--text-primary)", fontWeight: "300", lineHeight: "1.05", marginBottom: "2rem", letterSpacing: "-0.03em" }}>
-              Phase 0 <br/><span style={{ fontWeight: "700" }}>Workshop.</span>
+            <h1 style={{ fontSize: "4.25rem", color: "var(--text-primary)", fontWeight: "300", lineHeight: "1.05", marginBottom: "2rem", letterSpacing: "-0.03em" }}>
+              Phase 0 <br /><span style={{ fontWeight: "700" }}>Workshop.</span>
             </h1>
-            <p style={{ color: "var(--text-secondary)", fontSize: "1.25rem", marginBottom: "4rem", maxWidth: "480px", lineHeight: "1.6", fontWeight: "300" }}>
+            <p style={{ color: "var(--text-secondary)", fontSize: "1.25rem", marginBottom: "2.5rem", maxWidth: "480px", lineHeight: "1.6", fontWeight: "300" }}>
               Review insights, confirm the baseline, and align on the implementation roadmap.
             </p>
-            
+
             <div>
-              <button 
-                className="btn btn-primary" 
+              <button
+                className="btn btn-primary"
                 onClick={enterFullscreen}
                 style={{ fontSize: "1.05rem", padding: "1.25rem 2.5rem", borderRadius: "8px", display: "inline-flex", alignItems: "center", gap: "1rem", letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: "600", transition: "all 0.3s ease", boxShadow: "0 10px 25px rgba(45,212,191,0.15)", border: "none" }}
               >
-                Begin Session 
+                Begin Session
                 <span style={{ fontSize: "1.5rem", lineHeight: "1", fontWeight: "400" }}>→</span>
               </button>
             </div>
@@ -1968,18 +1968,19 @@ export default function WorkshopClient({ latestSubmission, participants }) {
 
           {/* Right Column: Agenda */}
           <div className="animate-fade-in" style={{ flex: "1 1 50%", display: "flex", flexDirection: "column", justifyContent: "center", animationDelay: "0.2s" }}>
-            <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "20px", padding: "3.5rem 4.5rem", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 25px 50px rgba(0,0,0,0.2)" }}>
-              <h3 style={{ fontSize: "0.85rem", color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.2em", marginBottom: "3rem", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "1.25rem" }}>
+            <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "20px", padding: "2.5rem 3.5rem", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 25px 50px rgba(0,0,0,0.2)" }}>
+              <h3 style={{ fontSize: "0.85rem", color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.2em", marginBottom: "2rem", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "1.25rem" }}>
                 Today's Agenda
               </h3>
-              
-              <ul className="slide-list-none" style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+
+              <ul className="slide-list-none" style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
                 {[
-                  { num: "01", title: "Alignment & Project Scope", desc: "Review core assumptions" },
-                  { num: "02", title: "Technical Architecture", desc: "Hosting and integration" },
-                  { num: "03", title: "Tender Scout Baseline", desc: "Data sources and output" },
-                  { num: "04", title: "Innovation Radar Baseline", desc: "Competitors and signals" },
-                  { num: "05", title: "Ownership & Next Steps", desc: "Locking the baseline" }
+                  { num: "01", title: "Opening", desc: "Welcome and structure" },
+                  { num: "02", title: "Baseline", desc: "Project focus and scope" },
+                  { num: "03", title: "Tender Scout", desc: "Sources and keywords" },
+                  { num: "04", title: "Innovation Radar", desc: "Competitors and signals" },
+                  { num: "05", title: "Ownership", desc: "Internal responsibilities" },
+                  { num: "06", title: "Decisions & next steps", desc: "Locking the baseline" }
                 ].map((item, idx) => (
                   <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: "1.5rem" }}>
                     <span style={{ color: "rgba(255,255,255,0.15)", fontSize: "1.5rem", fontWeight: "300", fontFamily: "monospace", lineHeight: "1.2" }}>{item.num}</span>
@@ -2001,17 +2002,17 @@ export default function WorkshopClient({ latestSubmission, participants }) {
 
   return (
     <div style={{ height: "100vh", width: "100vw", overflow: "hidden", display: "flex", background: "var(--bg-color)", position: "relative" }}>
-      
+
       {/* FULL BLEED SLIDE CONTAINER */}
       <div style={{ flexGrow: 1, display: "flex", flexDirection: "column", minHeight: 0, position: "relative" }}>
-        
+
         {/* PROGRESS BAR (Minimalist Top) */}
         <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "4px", background: "rgba(255,255,255,0.05)", zIndex: 10 }}>
           <div style={{ width: `${((currentStep + 1) / steps.length) * 100}%`, background: "var(--accent)", height: "100%", transition: "width 0.3s ease" }}></div>
         </div>
 
         {/* INVISIBLE NAVIGATION ZONES */}
-        <div 
+        <div
           onClick={() => setCurrentStep((prev) => Math.max(prev - 1, 0))}
           style={{ position: "absolute", left: 0, top: 0, width: "6%", height: "100%", zIndex: 20, cursor: currentStep === 0 ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
           className="nav-zone"
@@ -2019,8 +2020,8 @@ export default function WorkshopClient({ latestSubmission, participants }) {
         >
           {currentStep > 0 && <span className="nav-chevron">‹</span>}
         </div>
-        
-        <div 
+
+        <div
           onClick={() => setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1))}
           style={{ position: "absolute", right: 0, top: 0, width: "6%", height: "100%", zIndex: 20, cursor: currentStep === steps.length - 1 ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
           className="nav-zone"
@@ -2038,7 +2039,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
               <span style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>{currentStep + 1} / {steps.length}</span>
-              <button 
+              <button
                 onClick={() => setFacilitatorMode(!facilitatorMode)}
                 style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.1)", color: "var(--text-muted)", padding: "0.4rem 0.8rem", borderRadius: "20px", fontSize: "0.75rem", cursor: "pointer" }}
                 title="Toggle Facilitator Mode (Shift+F)"
@@ -2047,8 +2048,8 @@ export default function WorkshopClient({ latestSubmission, participants }) {
               </button>
             </div>
           </div>
-          
-          <div style={{ flexGrow: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
+
+          <div style={{ flexGrow: 1, display: "flex", flexDirection: "column", minHeight: 0, overflowY: "auto", overflowX: "hidden" }}>
             {steps[currentStep].content}
           </div>
         </div>
@@ -2061,7 +2062,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
             <h3 style={{ fontSize: "1.1rem", color: "var(--accent)", margin: 0 }}>Facilitator Notes</h3>
             <button onClick={() => setFacilitatorMode(false)} style={{ background: "transparent", border: "none", color: "var(--text-muted)", cursor: "pointer", fontSize: "1.5rem" }}>×</button>
           </div>
-          
+
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "2rem" }}>
             <div style={{ background: "rgba(255,255,255,0.03)", padding: "1rem", borderRadius: "8px" }}>
               <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", textTransform: "uppercase", display: "block", marginBottom: "0.25rem" }}>Time Target</span>
@@ -2082,7 +2083,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
 
           <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", marginTop: "2rem", paddingTop: "1.5rem" }}>
             <span style={{ fontSize: "0.8rem", textTransform: "uppercase", color: "var(--text-muted)", letterSpacing: "0.05em", display: "block", marginBottom: "0.75rem" }}>Private Scratchpad</span>
-            <textarea 
+            <textarea
               placeholder="Type temporary session notes here..."
               style={{ width: "100%", height: "150px", fontSize: "0.9rem", background: "rgba(0,0,0,0.3)", color: "var(--text-primary)", border: "1px solid rgba(255,255,255,0.1)", padding: "0.75rem", borderRadius: "8px", resize: "vertical" }}
             />
