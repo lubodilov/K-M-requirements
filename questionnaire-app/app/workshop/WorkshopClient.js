@@ -220,6 +220,90 @@ export default function WorkshopClient({ latestSubmission, participants }) {
     setDecisions(prev => ({ ...prev, [key]: value }));
   };
 
+  const generatePDFReport = () => {
+    import('jspdf').then((jsPDF) => {
+      import('jspdf-autotable').then((autoTable) => {
+        const doc = new jsPDF.default();
+        doc.setFontSize(22);
+        doc.text("Phase 0 Workshop Baseline", 14, 20);
+        doc.setFontSize(11);
+        doc.text("K+M x nelio | Finalized Configuration", 14, 30);
+        
+        let yPos = 40;
+        
+        const addSection = (title) => {
+          yPos += 10;
+          doc.setFontSize(14);
+          doc.text(title, 14, yPos);
+          yPos += 5;
+        };
+
+        addSection("1. Project Scope & Architecture");
+        autoTable.default(doc, {
+          startY: yPos,
+          theme: 'grid',
+          head: [['Parameter', 'Decision']],
+          body: [
+            ['Baseline Changes', decisions.baselineChanges || 'None'],
+            ['Baseline Status', decisions.baselineStatus],
+          ],
+        });
+        yPos = doc.lastAutoTable.finalY + 10;
+
+        addSection("2. Tender Scout Configuration");
+        autoTable.default(doc, {
+          startY: yPos,
+          theme: 'grid',
+          head: [['Parameter', 'Decision']],
+          body: [
+            ['Release 1 Regions', decisions.tsGeoRelease1.join(", ") || 'None'],
+            ['Excluded Regions', decisions.tsGeoExcluded.join(", ") || 'None'],
+            ['Must-have Sources', decisions.tsPortals.filter(p => p.selection === "Release 1").map(p => p.name).join(", ") || 'None'],
+            ['Keywords (Strong)', decisions.tsKeywordsStrong.join(", ") || 'None'],
+            ['Keywords (Exclude)', decisions.tsKeywordsExcluded.join(", ") || 'None'],
+            ['Alert Frequency', decisions.tsAlertFrequency || 'None'],
+            ['Alert Recipient', decisions.tsAlertRecipient || 'None'],
+          ],
+        });
+        yPos = doc.lastAutoTable.finalY + 10;
+
+        addSection("3. Innovation Radar Configuration");
+        autoTable.default(doc, {
+          startY: yPos,
+          theme: 'grid',
+          head: [['Parameter', 'Decision']],
+          body: [
+            ['Release 1 Competitors', decisions.irCompetitors.filter(c => c.tier === "Tier 1").map(c => c.name).join(", ") || 'None'],
+            ['Release 1 Tech Themes', decisions.irTechTopics.filter(t => t.selection === "Release 1").map(t => t.name).join(", ") || 'None'],
+            ['Output Experience', decisions.irOutputExperience || 'None'],
+            ['Update Frequency', decisions.irUpdateFrequency || 'None'],
+          ],
+        });
+        yPos = doc.lastAutoTable.finalY + 10;
+
+        if (yPos > 250) {
+          doc.addPage();
+          yPos = 20;
+        }
+
+        addSection("4. Ownership & Sign-off");
+        autoTable.default(doc, {
+          startY: yPos,
+          theme: 'grid',
+          head: [['Role', 'Owner']],
+          body: [
+            ['Tender Scout Owner', decisions.ownerTenderScout || 'Unassigned'],
+            ['Innovation Radar Owner', decisions.ownerInnovationRadar || 'Unassigned'],
+            ['IT & Security Contact', decisions.ownerIT || 'Unassigned'],
+            ['Sign-off Required', decisions.signOffProcess || 'Unassigned'],
+          ],
+        });
+
+        doc.save("K+M_Phase0_Workshop_Conclusions.pdf");
+      });
+    });
+  };
+
   const handleNext = () => {
     if (currentStep < 25) setCurrentStep(prev => prev + 1);
   };
@@ -1892,6 +1976,16 @@ export default function WorkshopClient({ latestSubmission, participants }) {
                   <li style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}><span style={{ color: "var(--accent)" }}>2.</span> Closing of any remaining open action items</li>
                   <li style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}><span style={{ color: "var(--accent)" }}>3.</span> Launch implementation preparation tasks</li>
                 </ul>
+                
+                <div style={{ marginTop: "2rem", paddingTop: "1.5rem", borderTop: "1px solid rgba(255,255,255,0.1)", textAlign: "center" }}>
+                  <button 
+                    onClick={generatePDFReport}
+                    className="btn btn-primary"
+                    style={{ fontSize: "0.95rem", padding: "0.75rem 1.5rem", borderRadius: "8px", fontWeight: "600", letterSpacing: "0.05em", textTransform: "uppercase", border: "none" }}
+                  >
+                    Download PDF Report
+                  </button>
+                </div>
               </div>
             </div>
           </div>
