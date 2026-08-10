@@ -77,6 +77,8 @@ export default function WorkshopClient({ latestSubmission, participants }) {
     tsMustHaves: "Daily dashboard showing matches with highlighted matching terms",
     tsNiceToHaves: "Automated daily email digests",
     tsOutputStatus: "Draft",
+    tsSuccessCriteria: ["", "", ""],
+    tsLanguages: "",
 
     // Step 14: Competitors (Innovation Radar)
     irCompetitors: [
@@ -101,6 +103,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
     irTechStatus: "Draft",
 
     // Step 16: Market Developments (Innovation Radar)
+    irMarketDevelopments: "",
     irMarketSignals: ["Infrastructure investment trends", "Strategic expansions"],
     irMarketStatus: "Draft",
 
@@ -125,6 +128,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
     irMustHaves: "Weekly alerts on competitor technology strategic announcements",
     irNiceToHaves: "Commodity pricing daily dashboard",
     irOutputStatus: "Draft",
+    irSuccessCriteria: ["", "", ""],
 
     // Step 22: Ownership
     ownerTenderScout: "Fawzi Fattel",
@@ -133,6 +137,8 @@ export default function WorkshopClient({ latestSubmission, participants }) {
     coordinatorProject: "Dario Rüede",
     userResearchRnd: "Franc Dugal",
     finalSignoffOwner: "",
+    signOffValidator: "",
+    validationMethod: "",
     ownershipStatus: "Draft",
 
     // Step 23: Constraints
@@ -261,8 +267,10 @@ export default function WorkshopClient({ latestSubmission, participants }) {
             ['Must-have Sources', decisions.tsPortals.filter(p => p.selection === "Release 1").map(p => p.name).join(", ") || 'None'],
             ['Keywords (Strong)', decisions.tsKeywordsStrong.join(", ") || 'None'],
             ['Keywords (Exclude)', decisions.tsKeywordsExcluded.join(", ") || 'None'],
+            ['Languages', decisions.tsLanguages || 'None'],
             ['Alert Frequency', decisions.tsAlertFrequency || 'None'],
             ['Alert Recipient', decisions.tsAlertRecipient || 'None'],
+            ['Success Criteria', decisions.tsSuccessCriteria.filter(Boolean).join(", ") || 'None'],
           ],
         });
         yPos = doc.lastAutoTable.finalY + 10;
@@ -275,8 +283,10 @@ export default function WorkshopClient({ latestSubmission, participants }) {
           body: [
             ['Release 1 Competitors', decisions.irCompetitors.filter(c => c.tier === "Tier 1").map(c => c.name).join(", ") || 'None'],
             ['Release 1 Tech Themes', decisions.irTechTopics.filter(t => t.selection === "Release 1").map(t => t.name).join(", ") || 'None'],
+            ['Market Developments', decisions.irMarketDevelopments || 'None'],
             ['Output Experience', decisions.irOutputExperience || 'None'],
-            ['Update Frequency', decisions.irUpdateFrequency || 'None'],
+            ['Update Frequency', decisions.irAlertFrequency || 'None'],
+            ['Success Criteria', decisions.irSuccessCriteria.filter(Boolean).join(", ") || 'None'],
           ],
         });
         yPos = doc.lastAutoTable.finalY + 10;
@@ -286,16 +296,18 @@ export default function WorkshopClient({ latestSubmission, participants }) {
           yPos = 20;
         }
 
-        addSection("4. Ownership & Sign-off");
+        addSection("4. Ownership & Validation");
         autoTable.default(doc, {
           startY: yPos,
           theme: 'grid',
-          head: [['Role', 'Owner']],
+          head: [['Role / Question', 'Owner / Decision']],
           body: [
             ['Tender Scout Owner', decisions.ownerTenderScout || 'Unassigned'],
             ['Innovation Radar Owner', decisions.ownerInnovationRadar || 'Unassigned'],
-            ['IT & Security Contact', decisions.ownerIT || 'Unassigned'],
-            ['Sign-off Required', decisions.signOffProcess || 'Unassigned'],
+            ['IT & Security Contact', decisions.ownerITSecurity || 'Unassigned'],
+            ['Baseline Confirmed By', decisions.finalSignoffOwner || 'Unassigned'],
+            ['Phase 0 Output Validator', decisions.signOffValidator || 'Unassigned'],
+            ['Validation Method', decisions.validationMethod || 'Unassigned'],
           ],
         });
 
@@ -882,6 +894,19 @@ export default function WorkshopClient({ latestSubmission, participants }) {
                 />
               </div>
             </div>
+
+            <div className="card" style={{ padding: "1.25rem", marginTop: "1rem" }}>
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label style={{ fontWeight: "500", fontSize: "0.8rem", color: "var(--text-secondary)" }}>Which languages must Tender Scout reliably recognize in Release 1?</label>
+                <input
+                  type="text"
+                  value={decisions.tsLanguages}
+                  onChange={(e) => updateDecision("tsLanguages", e.target.value)}
+                  placeholder="Based on confirmed Release 1 countries (e.g. English, French, German)..."
+                  style={{ padding: "0.5rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", marginTop: "0.5rem", width: "100%" }}
+                />
+              </div>
+            </div>
           </div>
         </div>
       ),
@@ -1046,6 +1071,44 @@ export default function WorkshopClient({ latestSubmission, participants }) {
       }
     },
     {
+      id: "ts-success",
+      chapter: "03 Tender Scout",
+      title: "How will we know Tender Scout is successful?",
+      content: (
+        <div className="animate-fade-in">
+          <p className="slide-p" style={{ textAlign: "center", marginBottom: "2rem" }}>After the first few weeks of use, what would need to be true for you to say Tender Scout is doing its job well?</p>
+          <div style={{ display: "grid", gap: "1rem", maxWidth: "700px", margin: "0 auto" }}>
+            {[0, 1, 2, 3].map(idx => (
+              <div key={idx} className="form-group" style={{ marginBottom: 0 }}>
+                <input
+                  type="text"
+                  value={decisions.tsSuccessCriteria[idx] || ""}
+                  onChange={(e) => {
+                    const copy = [...decisions.tsSuccessCriteria];
+                    copy[idx] = e.target.value;
+                    updateDecision("tsSuccessCriteria", copy);
+                  }}
+                  placeholder={`Success condition ${idx + 1}...`}
+                  style={{ padding: "0.8rem 1rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.02)", color: "var(--text-primary)", fontSize: "0.95rem", borderRadius: "8px", width: "100%" }}
+                />
+              </div>
+            ))}
+          </div>
+          <div className="highlight-box" style={{ maxWidth: "700px", margin: "2rem auto 0 auto" }}>
+            <strong>Note:</strong> We do not need to force numerical KPIs unless they are natural to the business. Focus on practical usefulness.
+          </div>
+        </div>
+      ),
+      facilitator: {
+        time: "3 min",
+        target: "Success Definition",
+        notes: [
+          "Capture 2-4 practical success conditions.",
+          "Do not force numerical KPIs unless K+M proposes them."
+        ]
+      }
+    },
+    {
       id: "ts-checkpoint",
       chapter: "03 Tender Scout",
       title: "Tender Scout Baseline Playback",
@@ -1078,10 +1141,19 @@ export default function WorkshopClient({ latestSubmission, participants }) {
                   </p>
                 </div>
                 <div style={{ background: "rgba(255,255,255,0.02)", padding: "1rem", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.05)" }}>
-                  <span className="data-label" style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase", display: "block", marginBottom: "0.25rem" }}>Core Terminology</span>
+                  <span className="data-label" style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase", display: "block", marginBottom: "0.25rem" }}>Core Terminology & Languages</span>
                   <p className="data-value" style={{ margin: 0, fontSize: "0.95rem", color: "var(--text-primary)" }}>
-                    {decisions.tsKeywordsStrong.slice(0, 4).join(", ") || "—"} (+ others)
+                    {decisions.tsKeywordsStrong.slice(0, 4).join(", ") || "—"} (+ others)<br/>
+                    <span style={{ fontSize: "0.85rem", opacity: 0.7 }}>Languages: {decisions.tsLanguages || "—"}</span>
                   </p>
+                </div>
+                <div style={{ background: "rgba(255,255,255,0.02)", padding: "1rem", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.05)" }}>
+                  <span className="data-label" style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase", display: "block", marginBottom: "0.25rem" }}>Success Criteria</span>
+                  <ul style={{ margin: "0", paddingLeft: "1.25rem", fontSize: "0.9rem", color: "var(--text-primary)" }}>
+                    {decisions.tsSuccessCriteria.filter(Boolean).length > 0 
+                      ? decisions.tsSuccessCriteria.filter(Boolean).map((sc, i) => <li key={i}>{sc}</li>)
+                      : <li>—</li>}
+                  </ul>
                 </div>
               </div>
             </div>
@@ -1328,55 +1400,32 @@ export default function WorkshopClient({ latestSubmission, participants }) {
     {
       id: "ir-market",
       chapter: "04 Innovation Radar",
-      title: "What market developments should trigger attention?",
+      title: "Which market developments should we monitor?",
       content: (
         <div className="slide-dashboard-layout">
           <div className="dashboard-left">
             <div className="context-box">
               <div className="context-title">What you told us</div>
-              <p className="context-content">Market signals: "Infrastructure" (High).</p>
+              <p className="context-content">Infrastructure — High</p>
             </div>
             <div className="context-box" style={{ background: "rgba(45, 212, 191, 0.05)", borderColor: "rgba(45, 212, 191, 0.2)" }}>
               <div className="context-title" style={{ color: "var(--accent)" }}>What we need to lock today</div>
-              <p className="context-content">"Infrastructure" is too broad. We need to define which specific market developments are decision-relevant.</p>
+              <p className="context-content">This gives the direction, but needs more precision to be actionable.</p>
             </div>
           </div>
           <div className="dashboard-right">
             <h3 style={{ fontSize: "0.85rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "1rem" }}>Decision</h3>
             <div className="card" style={{ padding: "1.5rem" }}>
-              <h4 style={{ fontSize: "0.95rem", color: "var(--accent)", marginBottom: "0.75rem" }}>Select or type actionable market signals</h4>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginBottom: "1.5rem" }}>
-                {["Infrastructure investment trends", "Pricing pressure", "Supply chain issues", "Government subsidies", "Decarbonization mandates"].map(sig => {
-                  const isSelected = decisions.irMarketSignals.includes(sig);
-                  return (
-                    <button
-                      key={sig}
-                      className={`btn toggle-btn ${isSelected ? "active" : ""}`}
-                      style={{ border: isSelected ? "1px solid var(--accent)" : "1px solid rgba(255,255,255,0.1)", background: isSelected ? "rgba(45, 212, 191, 0.1)" : "rgba(255,255,255,0.05)", color: isSelected ? "var(--text-primary)" : "var(--text-secondary)", padding: "0.5rem 1rem", fontSize: "0.85rem", borderRadius: "6px" }}
-                      onClick={() => {
-                        if (isSelected) {
-                          updateDecision("irMarketSignals", decisions.irMarketSignals.filter(x => x !== sig));
-                        } else {
-                          updateDecision("irMarketSignals", [...decisions.irMarketSignals, sig]);
-                        }
-                      }}
-                    >
-                      {isSelected && <span style={{ marginRight: "0.5rem" }}>✓</span>}
-                      {sig}
-                    </button>
-                  );
-                })}
-              </div>
-
-              <div style={{ display: "flex", gap: "0.5rem" }}>
-                <input type="text" id="add-market-input" placeholder="e.g. Overhead line standardization directives..." style={{ flexGrow: 1, padding: "0.6rem 1rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", borderRadius: "6px" }} />
-                <button className="btn btn-outline" style={{ padding: "0.6rem 1.25rem", borderColor: "rgba(255,255,255,0.2)", color: "var(--text-primary)" }} onClick={() => {
-                  const el = document.getElementById("add-market-input");
-                  if (el && el.value.trim()) {
-                    updateDecision("irMarketSignals", [...decisions.irMarketSignals, el.value.trim()]);
-                    el.value = "";
-                  }
-                }}>+ Add</button>
+              <h4 style={{ fontSize: "0.95rem", color: "var(--accent)", marginBottom: "0.75rem" }}>What changes in the infrastructure market would you want Dennis or Franc to know about early?</h4>
+              <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", marginBottom: "1rem" }}>Capture specific types of market signals/developments, rather than individual keywords.</p>
+              
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                <textarea 
+                  value={decisions.irMarketDevelopments}
+                  onChange={(e) => updateDecision("irMarketDevelopments", e.target.value)}
+                  placeholder="e.g. Overhead line standardization directives, new government subsidies for electrification..." 
+                  style={{ height: "100px", padding: "0.75rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.02)", color: "var(--text-primary)", borderRadius: "6px" }} 
+                />
               </div>
             </div>
           </div>
@@ -1386,7 +1435,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
         time: "4 min",
         target: "Market signals",
         notes: [
-          "Avoid using terms like 'infrastructure' abstractly.",
+          "Avoid predefining the answer for them.",
           "Focus on what changes in the market Franc or Dennis would want to know early."
         ]
       }
@@ -1672,6 +1721,40 @@ export default function WorkshopClient({ latestSubmission, participants }) {
       }
     },
     {
+      id: "ir-success",
+      chapter: "04 Innovation Radar",
+      title: "How will we know Innovation Radar is successful?",
+      content: (
+        <div className="animate-fade-in">
+          <p className="slide-p" style={{ textAlign: "center", marginBottom: "2rem" }}>After the first few weeks, what would make you say Innovation Radar is genuinely useful for Innovation and R&D?</p>
+          <div style={{ display: "grid", gap: "1rem", maxWidth: "700px", margin: "0 auto" }}>
+            {[0, 1, 2, 3].map(idx => (
+              <div key={idx} className="form-group" style={{ marginBottom: 0 }}>
+                <input
+                  type="text"
+                  value={decisions.irSuccessCriteria[idx] || ""}
+                  onChange={(e) => {
+                    const copy = [...decisions.irSuccessCriteria];
+                    copy[idx] = e.target.value;
+                    updateDecision("irSuccessCriteria", copy);
+                  }}
+                  placeholder={`Success condition ${idx + 1}...`}
+                  style={{ padding: "0.8rem 1rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.02)", color: "var(--text-primary)", fontSize: "0.95rem", borderRadius: "8px", width: "100%" }}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      ),
+      facilitator: {
+        time: "3 min",
+        target: "Success Definition",
+        notes: [
+          "Capture 2-4 practical success conditions for Innovation Radar."
+        ]
+      }
+    },
+    {
       id: "ir-checkpoint",
       chapter: "04 Innovation Radar",
       title: "Innovation Radar Baseline Playback",
@@ -1708,6 +1791,20 @@ export default function WorkshopClient({ latestSubmission, participants }) {
                   <p className="data-value" style={{ margin: 0, fontSize: "0.95rem", color: "var(--text-primary)" }}>
                     Copper ({decisions.irResourcesCopper.join("/")}) · Aluminium ({decisions.irResourcesAluminium.join("/")})
                   </p>
+                </div>
+                <div style={{ background: "rgba(255,255,255,0.02)", padding: "1rem", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.05)" }}>
+                  <span className="data-label" style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase", display: "block", marginBottom: "0.25rem" }}>Market Developments</span>
+                  <p className="data-value" style={{ margin: 0, fontSize: "0.95rem", color: "var(--text-primary)" }}>
+                    {decisions.irMarketDevelopments || "—"}
+                  </p>
+                </div>
+                <div style={{ background: "rgba(255,255,255,0.02)", padding: "1rem", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.05)" }}>
+                  <span className="data-label" style={{ color: "var(--text-muted)", fontSize: "0.8rem", textTransform: "uppercase", display: "block", marginBottom: "0.25rem" }}>Success Criteria</span>
+                  <ul style={{ margin: "0", paddingLeft: "1.25rem", fontSize: "0.9rem", color: "var(--text-primary)" }}>
+                    {decisions.irSuccessCriteria.filter(Boolean).length > 0 
+                      ? decisions.irSuccessCriteria.filter(Boolean).map((sc, i) => <li key={i}>{sc}</li>)
+                      : <li>—</li>}
+                  </ul>
                 </div>
               </div>
             </div>
@@ -1774,8 +1871,8 @@ export default function WorkshopClient({ latestSubmission, participants }) {
             </div>
 
             <div className="card" style={{ padding: "1.5rem" }}>
-              <div className="form-group" style={{ marginBottom: 0 }}>
-                <label style={{ fontWeight: "500", fontSize: "1rem", color: "var(--accent)", display: "block", marginBottom: "0.75rem" }}>Who gives final business confirmation of the Phase 0 baseline?</label>
+              <div className="form-group" style={{ marginBottom: "1.5rem" }}>
+                <label style={{ fontWeight: "500", fontSize: "1rem", color: "var(--accent)", display: "block", marginBottom: "0.75rem" }}>Who confirms the finalized Phase 0 baseline?</label>
                 <input
                   type="text"
                   value={decisions.finalSignoffOwner}
@@ -1783,6 +1880,32 @@ export default function WorkshopClient({ latestSubmission, participants }) {
                   placeholder="e.g. Fawzi Fattel & Dennis Darra"
                   style={{ padding: "0.75rem", border: "1px solid rgba(45,212,191,0.3)", background: "rgba(45,212,191,0.05)", color: "var(--text-primary)", borderRadius: "6px", width: "100%", fontSize: "1rem" }}
                 />
+              </div>
+
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label style={{ fontWeight: "500", fontSize: "1rem", color: "var(--accent)", display: "block", marginBottom: "0.75rem" }}>How will we validate the first results once implementation begins?</label>
+                
+                <div style={{ marginBottom: "1rem" }}>
+                  <label style={{ fontSize: "0.85rem", color: "var(--text-muted)", display: "block", marginBottom: "0.25rem" }}>Who confirms the Phase 0 output? (Do Fawzi/Dennis validate their respective areas?)</label>
+                  <input
+                    type="text"
+                    value={decisions.signOffValidator}
+                    onChange={(e) => updateDecision("signOffValidator", e.target.value)}
+                    placeholder="e.g. Fawzi validates TS output, Dennis validates IR..."
+                    style={{ padding: "0.75rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", borderRadius: "6px", width: "100%", fontSize: "0.95rem" }}
+                  />
+                </div>
+                
+                <div>
+                  <label style={{ fontSize: "0.85rem", color: "var(--text-muted)", display: "block", marginBottom: "0.25rem" }}>What is the practical method for validating initial results?</label>
+                  <input
+                    type="text"
+                    value={decisions.validationMethod}
+                    onChange={(e) => updateDecision("validationMethod", e.target.value)}
+                    placeholder="e.g. Weekly review of the first 20 matches..."
+                    style={{ padding: "0.75rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", borderRadius: "6px", width: "100%", fontSize: "0.95rem" }}
+                  />
+                </div>
               </div>
             </div>
           </div>
