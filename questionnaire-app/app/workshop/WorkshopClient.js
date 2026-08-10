@@ -265,15 +265,31 @@ export default function WorkshopClient({ latestSubmission, participants }) {
             ['Release 1 Regions', decisions.tsGeoRelease1.join(", ") || 'None'],
             ['Excluded Regions', decisions.tsGeoExcluded.join(", ") || 'None'],
             ['Must-have Sources', decisions.tsPortals.filter(p => p.selection === "Release 1").map(p => p.name).join(", ") || 'None'],
+            ['Relevance Includes', decisions.tsIncludes.join(", ") || 'None'],
+            ['Relevance Excludes', decisions.tsExcludes.join(", ") || 'None'],
+            ['Relevant Example', decisions.tsExampleRelevant || 'None'],
+            ['Irrelevant Example', decisions.tsExampleIrrelevant || 'None'],
             ['Keywords (Strong)', decisions.tsKeywordsStrong.join(", ") || 'None'],
+            ['Keywords (Supporting)', decisions.tsKeywordsSupporting.join(", ") || 'None'],
             ['Keywords (Exclude)', decisions.tsKeywordsExcluded.join(", ") || 'None'],
+            ['Keyword Synonyms', decisions.tsKeywordSynonyms || 'None'],
             ['Languages', decisions.tsLanguages || 'None'],
+            ['Track Contractors?', decisions.tsTrackContractors || 'None'],
+            ['Contractor Watchlist', decisions.tsContractorWatchlist.join(", ") || 'None'],
+            ['Output Format', decisions.tsOutputExperience || 'None'],
             ['Alert Frequency', decisions.tsAlertFrequency || 'None'],
             ['Alert Recipient', decisions.tsAlertRecipient || 'None'],
+            ['Output Must-Haves', decisions.tsMustHaves || 'None'],
+            ['Output Nice-to-Haves', decisions.tsNiceToHaves || 'None'],
             ['Success Criteria', decisions.tsSuccessCriteria.filter(Boolean).join(", ") || 'None'],
           ],
         });
         yPos = doc.lastAutoTable.finalY + 10;
+
+        if (yPos > 240) {
+          doc.addPage();
+          yPos = 20;
+        }
 
         addSection("3. Innovation Radar Configuration");
         autoTable.default(doc, {
@@ -282,16 +298,26 @@ export default function WorkshopClient({ latestSubmission, participants }) {
           head: [['Parameter', 'Decision']],
           body: [
             ['Release 1 Competitors', decisions.irCompetitors.filter(c => c.tier === "Tier 1").map(c => c.name).join(", ") || 'None'],
+            ['Competitor Developments', decisions.irCompetitorDevelopments || 'None'],
             ['Release 1 Tech Themes', decisions.irTechTopics.filter(t => t.selection === "Release 1").map(t => t.name).join(", ") || 'None'],
+            ['Market Signals', decisions.irMarketSignals.join(", ") || 'None'],
             ['Market Developments', decisions.irMarketDevelopments || 'None'],
-            ['Output Experience', decisions.irOutputExperience || 'None'],
+            ['Resource: Copper', decisions.irResourcesCopper.join(", ") || 'None'],
+            ['Resource: Aluminium', decisions.irResourcesAluminium.join(", ") || 'None'],
+            ['Sources Approach', decisions.irSourcesApproach || 'None'],
+            ['Mandatory Sources', decisions.irMandatorySources || 'None'],
+            ['Seed Watchlist', decisions.irSeedWatchlist || 'None'],
+            ['Output Format', decisions.irOutputExperience || 'None'],
             ['Update Frequency', decisions.irAlertFrequency || 'None'],
+            ['Alert Recipient', decisions.irAlertRecipient || 'None'],
+            ['Output Must-Haves', decisions.irMustHaves || 'None'],
+            ['Output Nice-to-Haves', decisions.irNiceToHaves || 'None'],
             ['Success Criteria', decisions.irSuccessCriteria.filter(Boolean).join(", ") || 'None'],
           ],
         });
         yPos = doc.lastAutoTable.finalY + 10;
 
-        if (yPos > 250) {
+        if (yPos > 240) {
           doc.addPage();
           yPos = 20;
         }
@@ -305,6 +331,7 @@ export default function WorkshopClient({ latestSubmission, participants }) {
             ['Tender Scout Owner', decisions.ownerTenderScout || 'Unassigned'],
             ['Innovation Radar Owner', decisions.ownerInnovationRadar || 'Unassigned'],
             ['IT & Security Contact', decisions.ownerITSecurity || 'Unassigned'],
+            ['Project Coordinator', decisions.coordinatorProject || 'Unassigned'],
             ['Baseline Confirmed By', decisions.finalSignoffOwner || 'Unassigned'],
             ['Phase 0 Output Validator', decisions.signOffValidator || 'Unassigned'],
             ['Validation Method', decisions.validationMethod || 'Unassigned'],
